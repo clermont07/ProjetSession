@@ -1,0 +1,25 @@
+<div class="topnav">
+    <a class="active" style="float:right" href="dashboard/projet/mvc/connection">Se connecter</a>
+    <a class="active" style="float:right" href="dashboard/projet/mvc/inscription">Inscription</a>
+    <a class="active" style="float:right" href="dashboard/projet/mvc/accueil">Accueil</a>
+</div>
+
+<?php
+$idHopital = $_GET["idHopital"];
+$hopitalManager = new hopitalManager(connexion("bdd_hms"));
+$result = $hopitalManager->getHopital($idHopital);
+
+    $contenu = "";
+    $contenu .="<br><br><br><center>";
+    $contenu .="<div class=card>";
+    $contenu .="    <img class=card-img-top src=".$result->getPhoto()." alt=Card image cap>";
+    $contenu .="    <div class=card-body>";
+    $contenu .="        <h3 class=card-title>".$result->getNom()."</h3>";
+    $contenu .="        <p class=card-text>Adresse : ".$result->getAdresse()."</p>";
+    $contenu .="        <p class=card-text>Ville : ".$result->getVille()."</p>";
+    $contenu .="        <p class=card-text>Code Postal : ".$result->getCodePostal()."</p>";
+    $contenu .="        <p class=card-text>Telephone : ".$result->getTelephone()."</p>";
+    $contenu .="    </div>";
+    $contenu .="</div></center><br><br><br>";
+    echo $contenu;
+?>

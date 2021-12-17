@@ -9,20 +9,15 @@ function autoloadFunction($class)
 {
 	// Ends with the string "Controller" ?
     if (preg_match('/Controller$/', $class))	
-        require("controllers/" . $class . ".php");
+        require("controllers/".$class . ".php");
     else
-        require("models/" . $class . ".php");
+        require("Models/".$class.".class.php");
 }
 
 // Registers the callback
 spl_autoload_register("autoloadFunction");
 
-function chargerClasse($classe){
-	require "./Class/".$classe . '.class.php'; // On inclut la classe
-}
-
-function connexion ($bdName){
-
+function connexion($bdName){
 	try{ 
 		$db=new PDO("mysql:host=localhost;dbname=".$bdName."","root",""); 
 	} 
@@ -31,8 +26,6 @@ function connexion ($bdName){
 	} 
 	return $db;
 }
-
-spl_autoload_register('chargerClasse');
 
 // Creating the router and processing parameters from the user's URL
 $router = new RouterController();

@@ -1,85 +1,90 @@
-body {
-	font-family: verdana;
-	font-size: 14px;
-	width: 900px;
-	margin: 0 auto;
-}
-
-h1 {
-	text-align: center;
-	color: #444444;
-	text-shadow: 3px 3px 3px #aaaaaa;
-}
-
-footer {
-	font-size: 11px;
-	text-align: center;
-	padding-top: 20px;
-}
-
-article {
-	text-shadow: 3px 3px 3px #aaaaaa;
-}
-
-nav ul {
-	list-style-type: none;
-}
-
-nav li {
+body { 
+	margin: 0;
+	font-family: Arial, Helvetica, sans-serif;
+	}
+	
+	.topnav {
+	margin-top: -5px;
+	overflow: hidden;
+	background-color:lightskyblue;
+	}
+	  
+	.topnav a {
 	float: left;
-	margin-right: 15px;
-}
-
-nav a {
-	background: #6FA4F8;
-	color: white;
-	padding: 5px 10px;
-	border-radius: 10px;
+	color: #f2f2f2;
+	text-align: center;
+	padding: 14px 16px;
 	text-decoration: none;
-	border: none;
-	cursor: pointer;
-}
-
-nav a:hover {
-	background: #2976f8;
-	color: #EEEEEE;
-	text-decoration: none;
-}
-
-/* Forms */
-
-input[type="submit"] {
-	background: #6FA4F8;
-	color: white;
-	padding: 5px 10px;
-	border-radius: 10px;
-	border: 0px;
-}
-
-input[type="submit"]:hover {
-	background: #2976f8;
-	color: #EEEEEE;
-	cursor: pointer;
-}
-
-input[type="text"], input[type="email"], input[type="password"] {
-	width: 250px;
-	border-radius: 5px;
-	border: 1px solid #aaaaaa;
-	padding: 0.3em;
-}
-
-input[type="submit"] {
-	padding: 10px 25px;
-	display: block;
-	margin: 0 auto;
-	margin-top: 20px;
-	font-weight: bold;
-}
-
-textarea {
-	border-radius: 5px;
-	border: 1px solid #aaaaaa;
-	width: 483px;
-	height: 90px;
-}
+	font-size: 17px;
+	}
+	
+	.topnav a:hover {
+	background-color: #ddd;
+	color: black;
+	}
+	
+	/*Accueil*/
+	.items{
+		width: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.tSante{
+	
+		width: 25%;
+		padding-left: 8%;
+	
+	}
+	.tCoeur{
+		padding-left: 6%;
+		width: 25%;
+	}
+	.tRosemont{
+		padding-left: 8%;
+		width: 25%;
+	}
+	.tTalon{
+		padding-left: 11%;
+		width: 25%;
+	}
+	.imgSante{
+		transition: 1s ease;
+		filter: brightness(100%);
+		width: 25%;
+	}
+	.imgSante:hover{
+		transition: 1s ease;
+		filter: brightness(50%);
+	}
+	
+	.imgCoeur{
+		transition: 1s ease;
+		filter: brightness(100%);
+		width: 25%;
+	}
+	.imgCoeur:hover{
+		transition: 1s ease;
+		filter: brightness(50%);
+	}
+	
+	.imgRosemont{
+		transition: 1s ease;
+		filter: brightness(100%);
+		width: 25%;
+	}
+	.imgRosemont:hover{
+		transition: 1s ease;
+		filter: brightness(50%);
+	}
+	
+	.imgTalon{
+		transition: 1s ease;
+		filter: brightness(100%);
+		width: 25%;
+	}
+	.imgTalon:hover{
+		transition: 1s ease;
+		filter: brightness(50%);
+	}
+	
