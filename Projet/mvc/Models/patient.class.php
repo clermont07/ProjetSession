@@ -1,7 +1,7 @@
 <?php
     class patient 
     {
-        private $_idPatient,$_nom,$_prenom,$_telephone,$_dateNaissance,$_idSexe,$_idGroupeSanguin,$_courriel,$_paysNaissance,$_idPrescription,$_adresse,$_codePostal,$_ville,$_idFacture,$_idHopital,$_idEmployer,$_description,$_motDePasse,$_pseudo,$_assuranceMaladie;
+        private $_idPatient,$_nom,$_prenom,$_telephone,$_dateNaissance,$_idSexe,$_idGrpSang,$_paysNaissance,$_idPrescription,$_adresse,$_codePostal,$_ville,$_idFacture,$_idHopital,$_idEmployer,$_description,$_motDePasse,$_pseudo,$_assuranceMaladie;
 
         public function __construct(array $donnee = array()){
             if(!empty($donnee)){
@@ -42,11 +42,8 @@
         public function getPaysNaissance(){            return $this->_paysNaissance;}
         public function setPaysNaissance($paysNaissance){              $this->_paysNaissance = $paysNaissance;} 
 
-        public function getCourriel(){            return $this->_courriel;}
-        public function setCourriel($courriel){              $this->_courriel = $courriel;} 
-
-        public function getIdGroupeSanguin(){  return $this->_idGroupeSanguin;}
-        public function setIdGroupeSanguin ($idGroupeSanguin){$this->_idGroupeSanguin = $idGroupeSanguin;} 
+        public function getIdGrpSang(){  return $this->_idGrpSang;}
+        public function setIdGrpSang ($idGrpSang){$this->_idGrpSang = $idGrpSang;} 
 
         public function getIdSexe(){  return $this->_idSexe;}
         public function setIdSexe ($idSexe){$this->_idSexe = $idSexe;} 

@@ -1,0 +1,72 @@
+<?php
+    
+if (isset($_POST["connection"])){
+    if (isset($_POST["pseudo"]) && isset($_POST["motDePasse"])){
+
+        if($_POST["poste"] == "patient"){
+            $array = array("pseudo" => $_POST['pseudo'],"motDePasse" => $_POST['motDePasse']);
+            $patient = new patient($array);
+            $patientManager = new patientManager(connexion("bdd_hms"));
+            $results = $patientManager->getPatientLog($patient);
+            $poste = "patient";
+        }
+        if($_POST["poste"] == "employer"){
+            $array = array("pseudo" => $_POST['pseudo'],"motDePasse" => $_POST['motDePasse']);
+            $employer = new employer($array);
+            $employerManager = new employerManager(connexion("bdd_hms"));
+            $results = $employerManager->getEmployerLog($employer);
+        }
+
+        if ($results != false) 
+        {
+            $_SESSION['pseudo'] = $_POST['pseudo'];
+            $_SESSION['motDePasse'] = $_POST['motDePasse'];
+
+            if($_POST["poste"] == "employer"){
+                $poste = $results->getIdPoste();
+            }
+            if($poste == "patient"){
+                header("Location:patient");
+            }
+            elseif($poste == "2"){
+                header("Location:admin");
+            }
+            elseif($poste == "3"){
+                header("Location:infirmiere");
+            }
+            elseif($poste == "1"){
+                header("Location:medecin");
+            }
+        }
+        else{
+            echo '<script>alert("Veuillez vous inscrire!")</script>';
+        }
+    }
+    if(!(isset($_SESSION["pseudo"]) && isset($_SESSION["motDePasse"]))){
+        header("Location:connection");
+    }
+}
+?>
+
+<div class="topnav">
+    <a class="active" style="float:right" href="dashboard/projet/mvc/connection">Se connecter</a>
+    <a class="active" style="float:right" href="dashboard/projet/mvc/inscription">Inscription</a>
+    <a class="active" style="float:right" href="dashboard/projet/mvc/accueil">Accueil</a>
+</div>
+
+<center>
+<div>
+    <br><br><br><br>
+    <form method="post">
+        <h1 style=color:black>Connection</h1>
+        <select name="poste" style="width:178px;">
+        <option value="patient" selected>Patient</option>
+        <option value="employer">Employer</option>
+        </select><br><br>
+        <input type="text" name="pseudo" placeholder="Pseudo" id="pseudo" minlength="6" maxlength='30' required><br><br>
+        <input type="password" name="motDePasse" placeholder="Mot de passe" id="motDePasse" minlength="6" maxlength='30' required><br><br>
+        <input type="submit" name="connection" value="Connecter"><br><br>
+    </form>
+</div>
+<br><br><br><br><br><br><br><br><br><br><br><br>
+</center>

@@ -29,7 +29,6 @@ class hopitalManager{
         return $hopital;  
     }
 
-    
     public function getHopital($id){
         $req = $this->_db->query("SELECT * FROM hopital WHERE idHopital = ".$id."");
         $data=$req->fetch(PDO::FETCH_ASSOC);

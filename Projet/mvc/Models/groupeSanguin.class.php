@@ -9,8 +9,8 @@
             }
         }
 
-        public function getIdGroupeSanguin(){  return $this->_idGroupeSanguin;}
-        public function setIdGroupeSanguin ($idGroupeSanguin){$this->_idGroupeSanguin = $idGroupeSanguin;} 
+        public function getIdGrpSang(){  return $this->_idGroupeSanguin;}
+        public function setIdGrpSang ($idGroupeSanguin){$this->_idGroupeSanguin = $idGroupeSanguin;} 
 
         public function getGroupeSanguin(){            return $this->_groupeSanguin;}
         public function setGroupeSanguin($groupeSanguin){              $this->_groupeSanguin = $groupeSanguin;} 
