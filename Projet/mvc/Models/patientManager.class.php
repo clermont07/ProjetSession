@@ -53,6 +53,5 @@ class patientManager{
         $query->bindValue(":pseudo",$patient->getPseudo());
         $query->bindValue(":motDePasse",$patient->getMotDePasse());
         $query->execute();
-        
     }
 }

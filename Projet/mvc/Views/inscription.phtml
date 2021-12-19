@@ -100,19 +100,19 @@ $resultSang = $sangManager->getAllSang();
                 echo '<script>alert("Entrer une date de naissance valide!")</script>';
             }
             else{
-                $array = array("prenom" => $_POST['prenom'],
-                "nom" => $_POST['nom'],
-                "telephone" => $_POST['telephone'],
-                "adresse" => $_POST['adresse'],
-                "ville" => $_POST['ville'],
-                "codePostal" => $_POST['codePostal'],
+                $array = array("prenom" => trim($_POST['prenom']),
+                "nom" => trim($_POST['nom']),
+                "telephone" => trim($_POST['telephone']),
+                "adresse" => trim($_POST['adresse']),
+                "ville" => trim($_POST['ville']),
+                "codePostal" => trim($_POST['codePostal']),
                 "idSexe" => $_POST['sexe'],
                 "idGrpSang" => $_POST['grpSang'],
-                "assuranceMaladie" => $_POST['assuranceMaladie'],
-                "paysNaissance" => $_POST['paysNaissance'],
+                "assuranceMaladie" => trim($_POST['assuranceMaladie']),
+                "paysNaissance" => trim($_POST['paysNaissance']),
                 "dateNaissance" => $_POST['dateNaissance'],
-                "pseudo" => $_POST['pseudo'],
-                "motDePasse" => $_POST['motDePasse']);
+                "pseudo" => trim($_POST['pseudo']),
+                "motDePasse" => trim($_POST['motDePasse']));
 
                 $patient = new patient($array);
                 $patientManager = new patientManager(connexion("bdd_hms"));

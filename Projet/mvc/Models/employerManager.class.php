@@ -23,8 +23,7 @@ class employerManager{
     {
         $pseudo = $employer->getPseudo();
         $motDePasse = $employer->getMotDePasse();
-
-        $req = $this->_db->query("SELECT  idPoste, Pseudo , MotDePasse FROM employer WHERE  Pseudo='".$pseudo."' AND MotDePasse='".$motDePasse."'");
+        $req = $this->_db->query("SELECT  idPoste, Pseudo ,idEmployer, MotDePasse FROM employer WHERE  Pseudo='".$pseudo."' AND MotDePasse='".$motDePasse."'");
         $data = $req->fetch(PDO::FETCH_ASSOC);
 
         if($data != Null){
@@ -35,5 +34,26 @@ class employerManager{
             echo '<script>alert("Veuillez vous inscrire!")</script>';
         }
     }
+    
+    public function getEmployer($id){
+        $req = $this->_db->query("SELECT * FROM employer WHERE idEmployer = ".$id."");
+        $data=$req->fetch(PDO::FETCH_ASSOC);
+        if($data !== Null){
+            $obj1 = new employer($data);
+            return $obj1;
+        }
+        return false;
+    }
 
+    public function update(employer $employer) 
+    {
+        $query = $this->_db->prepare(" UPDATE employer SET idDepartement = (:idDepartement), Courriel = (:courriel), MotDePasse = (:motDePasse), Pseudo = (:pseudo) WHERE idEmployer=(:idEmployer)");
+        $query->bindValue(":idEmployer",$employer->getIdEmployer());
+        $query->bindValue(":idDepartement",$employer->getIdDepartement());
+        $query->bindValue(":courriel",$employer->getCourriel());
+        $query->bindValue(":pseudo",$employer->getPseudo());
+        $query->bindValue(":motDePasse",$employer->getMotDePasse());
+        $query->execute();
+        
+    }
 }

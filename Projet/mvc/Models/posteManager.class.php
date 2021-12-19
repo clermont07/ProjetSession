@@ -19,6 +19,14 @@ class posteManager{
         return $this->_db;
     }
 
-    
+    public function getPoste($id){
+        $req = $this->_db->query("SELECT * FROM poste WHERE idPoste = ".$id."");
+        $data=$req->fetch(PDO::FETCH_ASSOC);
+        if($data !== Null){
+            $obj1 = new poste($data);
+            return $obj1;
+        }
+        return false;
+    }
 
 }

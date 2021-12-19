@@ -8,13 +8,14 @@ if (isset($_POST["connection"])){
             $patient = new patient($array);
             $patientManager = new patientManager(connexion("bdd_hms"));
             $results = $patientManager->getPatientLog($patient);
-            $poste = "patient";
         }
         if($_POST["poste"] == "employer"){
             $array = array("pseudo" => $_POST['pseudo'],"motDePasse" => $_POST['motDePasse']);
             $employer = new employer($array);
             $employerManager = new employerManager(connexion("bdd_hms"));
             $results = $employerManager->getEmployerLog($employer);
+            $_SESSION['idPoste'] = $results->getIdPoste();
+            $_SESSION['id'] = $results->getIdEmployer();
         }
 
         if ($results != false) 
@@ -22,28 +23,16 @@ if (isset($_POST["connection"])){
             $_SESSION['pseudo'] = $_POST['pseudo'];
             $_SESSION['motDePasse'] = $_POST['motDePasse'];
 
-            if($_POST["poste"] == "employer"){
-                $poste = $results->getIdPoste();
-            }
-            if($poste == "patient"){
+            if($_POST["poste"] == "patient"){
                 header("Location:patient");
             }
-            elseif($poste == "2"){
-                header("Location:admin");
-            }
-            elseif($poste == "3"){
-                header("Location:infirmiere");
-            }
-            elseif($poste == "1"){
-                header("Location:medecin");
+            elseif($_POST["poste"] == "employer"){
+                header("Location:profil");
             }
         }
         else{
             echo '<script>alert("Veuillez vous inscrire!")</script>';
         }
-    }
-    if(!(isset($_SESSION["pseudo"]) && isset($_SESSION["motDePasse"]))){
-        header("Location:connection");
     }
 }
 ?>

@@ -1,0 +1,99 @@
+<style>
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  width: 300px;
+  border-radius: 5px;
+  margin:0 auto;
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+img {
+  border-radius: 5px 5px 0 0;
+  width: 300px;
+  height: 400px;
+}
+
+.container {
+  width:100%;
+}
+#right {
+  float:right;
+}
+</style>
+
+<?php
+include_once("./fonction.php");
+
+if(isset($_POST['mofifier'])){
+    if(!strstr(trim($_POST['courriel']),"@")){
+      echo '<script>alert("Le email est invalide!")</script>';
+    }else{
+
+        $array = array("pseudo" => trim($_POST['pseudo']),
+                       "idEmployer" => $_SESSION["id"],
+                       "motDePasse" => trim($_POST['motDePasse']),
+                       "courriel" => trim($_POST['courriel']),
+                       "idDepartement" => $_POST['departement']);
+
+        $employer = new employer($array);
+        $employerManager = new employerManager(connexion("bdd_hms"));
+        try{
+        $employerManager->update($employer);
+        }
+        catch(Exception $e){
+            echo '<script>alert("Modification échoué!")</script>';
+        }
+    }
+}
+$idEmployer = $_SESSION["id"];
+
+$employerManager = new employerManager(connexion("bdd_hms"));
+$result = $employerManager->getEmployer($idEmployer);
+
+$posteManager = new posteManager(connexion("bdd_hms"));
+$resultPoste = $posteManager->getPoste($result->getIdPoste());
+
+$hopitalManager = new hopitalManager(connexion("bdd_hms"));
+$resultHopital = $hopitalManager->getHopital($result->getIdHopital());
+
+$departementManager = new departementManager(connexion("bdd_hms"));
+$resultDepartement = $departementManager->getDepartement($result->getIdDepartement());
+$resultAllDepartement = $departementManager->getAllDepartement();
+
+$contenu1  ="<form method=post >";
+$contenu1 .="<div id=right>";
+$contenu1 .="<h4 	><b>Modification</b></h4>";
+$contenu1 .="<p>Pseudo &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=text name=pseudo minlength=6 maxlength=30 value=".$result->getPseudo()." required></p>";
+$contenu1 .="<p>Mot de passe <input type=password name=motDePasse minlength=6 maxlength=30 value=".$result->getMotDePasse()." required></p>";
+$contenu1 .="<p>Courriel &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=text name=courriel maxlength=100 value=".$result->getCourriel()." required></p>";
+$contenu1 .="<p>Département &nbsp;<select name=departement style=width:170px;></p>";
+foreach($resultAllDepartement as $key => $value){
+    if($value->getIdDepartement() == $result->getIdDepartement()){
+      $contenu1 .="<option selected value=".$value->getIdDepartement().">".$value->getDepartement()."</option>";
+    }else{
+    $contenu1 .="<option value=".$value->getIdDepartement().">".$value->getDepartement()."</option>";
+    }
+}
+$contenu1 .="</select><br><br>";
+$contenu1 .="<input type=submit name=mofifier value=Modifier>";
+$contenu1 .="</div>";
+$contenu1 .="</form>";
+echo $contenu1;
+
+
+$contenu2  ="<br><div class=card>";
+$contenu2 .="<img src=".$result->getPhoto()." alt=Avatar style=width:100%>";
+$contenu2 .="<div class=container>";
+$contenu2 .="<h4><b>".$result->getPrenom()." ".$result->getNom()."</b></h4>";
+$contenu2 .="<p>".$resultPoste->getPoste()."</p>";
+$contenu2 .="<p>Hopital ".$resultHopital->getNom()."</p>";
+$contenu2 .="<p>Département : ".$resultDepartement->getDepartement()."</p>";
+$contenu2 .="<p>Employer No : ".$idEmployer."</p>";
+$contenu2 .="<p>".$result->getCourriel()."</p>";
+$contenu2 .="</div>";
+echo $contenu2;
+?>
