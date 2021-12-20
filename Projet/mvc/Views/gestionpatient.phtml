@@ -10,46 +10,51 @@ $resultSang = $sangManager->getAllSang();
 
 <center>
 <div>
-    <form method="post">
         <h1 style=color:black>Gestion compte patient</h1>
         <table>
+            <tr><form method="post">
+                <td>Recherche patient  </td>
+                <td><input type="text" name="assuranceMaladieTrouver" style="width:42%"; pattern="[A-Z]{4}[0-9]{8}" placeholder="AAAA12345678" maxlength='20' required><input type="submit" name="trouver" value="Trouver"></td>
+                </form>
+            </tr>
             <tr>
-                <td>Numéro Responsable : </td>
+            <form method="post">
+                <td>Numéro Responsable  </td>
                 <td><?php echo $_SESSION["id"]; ?></td>
             </tr>
             <tr>
                 <td>Hopital  </td>
-                <td><input type="text" name="hopital" maxlength='30' required></td>
+                <td><?php echo $_SESSION["hopitalNom"]; ?></td>
             </tr>
             <tr>
                 <td>Prénom  </td>
-                <td><input type="text" name="prenom" maxlength='30' required></td>
+                <td><input type="text" name="prenom" id="prenom" maxlength='30' required></td>
             </tr>
             <tr>
                 <td>Nom  </td>
-                <td><input type="text" name="nom" maxlength='30' required></td>
+                <td><input type="text" name="nom" id="nom" maxlength='30' required></td>
             </tr>
             <tr>
                 <td>Téléphone  </td>
-                <td><input type="text" name="telephone" pattern="[0-9]{10}" placeholder="5140000000" required></td>
+                <td><input type="text" name="telephone" id="telephone" pattern="[0-9]{10}" placeholder="5140000000" required></td>
             </tr>
             <tr>
                 <td>Adresse  </td>
-                <td><input type="text" name="adresse" maxlength='100' required></td>
+                <td><input type="text" name="adresse" id="adresse" maxlength='100' required></td>
             </tr>
             <tr>
                 <td>Ville  </td>
-                <td><input type="text" name="ville" maxlength='50' required></td>
+                <td><input type="text" name="ville" id="ville" maxlength='50' required></td>
             </tr>
             <tr>
                 <td>Code Postal  </td>
-                <td><input type="text" name="codePostal" pattern="[A-Z]{1}[0-9]{1}[A-Z]{1}[0-9]{1}[A-Z]{1}[0-9]{1}" placeholder="X1X1X1" required></td>
+                <td><input type="text" name="codePostal" id="codePostal" pattern="[A-Z]{1}[0-9]{1}[A-Z]{1}[0-9]{1}[A-Z]{1}[0-9]{1}" placeholder="X1X1X1" required></td>
             </tr>
             <tr>
                 <td>Sexe  </td>
                 <td>
                 <?php
-                $contenu ="<select name=sexe style=width:100%;>";
+                $contenu ="<select name=sexe id=sexe style=width:74%;>";
                 foreach($resultSexe as $key => $value){
                     $contenu .="<option value=".$value->getIdSexe().">".$value->getGenre()."</option>";
                 }
@@ -61,7 +66,7 @@ $resultSang = $sangManager->getAllSang();
                 <td>Groupe Sanguin  </td>
                 <td>
                 <?php
-                $contenu1 ="<select name=grpSang style=width:100%;>";
+                $contenu1 ="<select name=grpSang  id=grpSang style=width:74%;>";
                 foreach($resultSang as $key => $value){
                     $contenu1 .="<option value=".$value->getIdGrpSang().">".$value->getGroupeSanguin()."</option>";
                 }
@@ -72,27 +77,31 @@ $resultSang = $sangManager->getAllSang();
             </tr>
             <tr>
                 <td>Assurance Maladie  </td>
-                <td><input type="text" name="assuranceMaladie" pattern="[A-Z]{4}[0-9]{8}" placeholder="AAAA12345678" maxlength='20' required></td>
+                <td><input type="text" name="assuranceMaladie" id="assuranceMaladie" pattern="[A-Z]{4}[0-9]{8}" placeholder="AAAA12345678" maxlength='20' required></td>
+            </tr>
+            <tr>
+                <td>Description  </td>
+                <td><textarea name="description" name="description" id="description" maxlength='500' style="width:71%"></textarea></td>
             </tr>
             <tr>
                 <td>Pays de naissance  </td>
-                <td><input type="text" name="paysNaissance" maxlength='50' required></td>
+                <td><input type="text" name="paysNaissance" id="paysNaissance" maxlength='50' required></td>
             </tr>
             <tr>
                 <td>Date de naissance  </td>
-                <td><input type="date" name="dateNaissance" style="width:97%;" required></td>
+                <td><input type="date" name="dateNaissance" id="dateNaissance" style="width:71%" required></td>
             </tr>
             <tr>
                 <td>Pseudo  </td>
-                <td><input type="text" name="pseudo" minlength="6" maxlength='30' required></td>
+                <td><input type="text" name="pseudo" id="pseudo" minlength="6" maxlength='30' required></td>
             </tr>
             <tr>
                 <td>Mot de passe  </td>
-                <td><input type="password" name="motDePasse" minlength="6" maxlength='30' required></td>
+                <td><input type="password" name="motDePasse" id="motDePasse" minlength="6" maxlength='30' required></td>
             </tr>
             <tr>
                 <td></td>
-                <td><input type="submit" name="inscrire" value="Inscrire"></td>
+                <td><input type="submit" name="inscrire" style="width:37%" value="Inscrire"><input type="submit" style="width:37%" name="modifier" value="Modifier"></td>
             </tr>
         <table>
     </form>
@@ -104,6 +113,9 @@ $resultSang = $sangManager->getAllSang();
             }
             else{
                 $array = array("prenom" => trim($_POST['prenom']),
+                "idEmployer" => $_SESSION["id"],
+                "idHopital" => $_SESSION["idHopital"],
+                "description" => trim($_POST['description']),
                 "nom" => trim($_POST['nom']),
                 "telephone" => trim($_POST['telephone']),
                 "adresse" => trim($_POST['adresse']),
@@ -120,11 +132,68 @@ $resultSang = $sangManager->getAllSang();
                 $patient = new patient($array);
                 $patientManager = new patientManager(connexion("bdd_hms"));
                 try{
-                $patientManager->insertion($patient);
-                echo "<center><p style=color:green;>Bonjour ".$_POST["prenom"].", vous êtes inscrit!</p></center>";
+                $patientManager->gestionPatientInsertion($patient);
+                echo "<center><p style=color:green;>Patient inscrit!</p></center>";
                 }
                 catch(Exception $e){
                     echo '<script>alert("Insertion échoué! Pseudo ou Assurance maladie est déjà utilisé!")</script>';
+                }
+            }
+        }
+        if(isset($_POST['trouver'])){
+            $array = array("assuranceMaladie" => $_POST['assuranceMaladieTrouver'],"idHopital" => $_SESSION['idHopital']);
+            $patient = new patient($array);
+            $patientManager = new patientManager(connexion("bdd_hms"));
+            $result = $patientManager->getGestionPatient($patient);
+            $_SESSION['idPatient'] = $result->getIdPatient();
+            ?>
+            <script>document.getElementById("prenom").value = '<?php  echo $result->getPrenom(); ?>'</script>
+            <script>document.getElementById("nom").value = '<?php  echo $result->getNom(); ?>'</script>
+            <script>document.getElementById("telephone").value = '<?php  echo $result->getTelephone(); ?>'</script>
+            <script>document.getElementById("adresse").value = '<?php  echo $result->getAdresse(); ?>'</script>
+            <script>document.getElementById("ville").value = '<?php  echo $result->getVille(); ?>'</script>
+            <script>document.getElementById("codePostal").value = '<?php  echo $result->getCodePostal(); ?>'</script>
+            <script>document.getElementById("sexe").value = '<?php  echo $result->getIdSexe(); ?>'</script>
+            <script>document.getElementById("grpSang").value = '<?php  echo $result->getIdGrpSang(); ?>'</script>
+            <script>document.getElementById("assuranceMaladie").value = '<?php  echo $result->getAssuranceMaladie(); ?>'</script>
+            <script>document.getElementById("description").value = '<?php  echo $result->getDescription(); ?>'</script>
+            <script>document.getElementById("paysNaissance").value = '<?php  echo $result->getPaysNaissance(); ?>'</script>
+            <script>document.getElementById("dateNaissance").value = '<?php  echo $result->getDateNaissance(); ?>'</script>
+            <script>document.getElementById("pseudo").value = '<?php  echo $result->getPseudo(); ?>'</script>
+            <script>document.getElementById("motDePasse").value = '<?php  echo $result->getMotDePasse(); ?>'</script>
+            <?php
+        }
+        if(isset($_POST['modifier'])){
+            if($_POST["dateNaissance"] > date("Y-m-d")){
+                echo '<script>alert("Entrer une date de naissance valide!")</script>';
+            }
+            else{
+                $array = array("prenom" => trim($_POST['prenom']),
+                "idPatient" => $_SESSION["idPatient"],
+                "idEmployer" => $_SESSION["id"],
+                "idHopital" => $_SESSION["idHopital"],
+                "description" => trim($_POST['description']),
+                "nom" => trim($_POST['nom']),
+                "telephone" => trim($_POST['telephone']),
+                "adresse" => trim($_POST['adresse']),
+                "ville" => trim($_POST['ville']),
+                "codePostal" => trim($_POST['codePostal']),
+                "idSexe" => $_POST['sexe'],
+                "idGrpSang" => $_POST['grpSang'],
+                "assuranceMaladie" => trim($_POST['assuranceMaladie']),
+                "paysNaissance" => trim($_POST['paysNaissance']),
+                "dateNaissance" => $_POST['dateNaissance'],
+                "pseudo" => trim($_POST['pseudo']),
+                "motDePasse" => trim($_POST['motDePasse']));
+
+                $patient = new patient($array);
+                $patientManager = new patientManager(connexion("bdd_hms"));
+                try{
+                $patientManager->gestionPatientModifier($patient);
+                echo "<center><p style=color:green;>Patient Modifier!</p></center>";
+                }
+                catch(Exception $e){
+                    echo '<script>alert("Erreur Modification!")</script>';
                 }
             }
         }

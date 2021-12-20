@@ -54,4 +54,64 @@ class patientManager{
         $query->bindValue(":motDePasse",$patient->getMotDePasse());
         $query->execute();
     }
+
+    public function gestionPatientModifier(patient $patient) 
+    {
+        echo $patient->getMotDePasse();
+        $query = $this->_db->prepare("UPDATE patient SET Description = (:description),Prenom = (:prenom),Nom = (:nom),Telephone = (:telephone),Adresse = (:adresse),Ville = (:ville),CodePostal = (:codePostal),idSexe = (:sexe),idGrpSang = (:grpSang),AssuranceMaladie = (:assuranceMaladie),PaysNaissance = (:paysNaissance),DateNaissance = (:dateNaissance),Pseudo = (:pseudo),MotDePasse = (:motDePasse) WHERE idPatient = (:idPatient)"); 
+        $query->bindValue(":idPatient",$patient->getIdPatient());
+        $query->bindValue(":description",$patient->getDescription());
+        $query->bindValue(":prenom",$patient->getPrenom());
+        $query->bindValue(":nom",$patient->getNom());
+        $query->bindValue(":telephone",$patient->getTelephone());
+        $query->bindValue(":adresse",$patient->getAdresse());
+        $query->bindValue(":ville",$patient->getVille());
+        $query->bindValue(":codePostal",$patient->getCodePostal());
+        $query->bindValue(":sexe",$patient->getIdSexe());
+        $query->bindValue(":grpSang",$patient->getIdGrpSang());
+        $query->bindValue(":assuranceMaladie",$patient->getAssuranceMaladie());
+        $query->bindValue(":paysNaissance",$patient->getPaysNaissance());
+        $query->bindValue(":dateNaissance",$patient->getDateNaissance());
+        $query->bindValue(":pseudo",$patient->getPseudo());
+        $query->bindValue(":motDePasse",$patient->getMotDePasse());
+        $query->execute();
+    }
+
+    public function gestionPatientInsertion(patient $patient) 
+    {
+        $query = $this->_db->prepare("INSERT into patient(idHopital,idEmployer,Description,Prenom,Nom,Telephone,Adresse,Ville,CodePostal,idSexe,idGrpSang,AssuranceMaladie,PaysNaissance,DateNaissance,Pseudo,MotDePasse) VALUES (:idHopital,:idEmployer,:description,:prenom,:nom,:telephone,:adresse,:ville,:codePostal,:sexe,:grpSang,:assuranceMaladie,:paysNaissance,:dateNaissance,:pseudo,:motDePasse)"); 
+        $query->bindValue(":idHopital",$patient->getIdHopital());
+        $query->bindValue(":idEmployer",$patient->getIdEmployer());
+        $query->bindValue(":description",$patient->getDescription());
+        $query->bindValue(":prenom",$patient->getPrenom());
+        $query->bindValue(":nom",$patient->getNom());
+        $query->bindValue(":telephone",$patient->getTelephone());
+        $query->bindValue(":adresse",$patient->getAdresse());
+        $query->bindValue(":ville",$patient->getVille());
+        $query->bindValue(":codePostal",$patient->getCodePostal());
+        $query->bindValue(":sexe",$patient->getIdSexe());
+        $query->bindValue(":grpSang",$patient->getIdGrpSang());
+        $query->bindValue(":assuranceMaladie",$patient->getAssuranceMaladie());
+        $query->bindValue(":paysNaissance",$patient->getPaysNaissance());
+        $query->bindValue(":dateNaissance",$patient->getDateNaissance());
+        $query->bindValue(":pseudo",$patient->getPseudo());
+        $query->bindValue(":motDePasse",$patient->getMotDePasse());
+        $query->execute();
+    }
+
+    public function getGestionPatient(patient $patient){
+        $assurance = $patient->getAssuranceMaladie();
+        $hopital = $patient->getIdHopital();
+
+        $req = $this->_db->query("SELECT * FROM patient WHERE AssuranceMaladie = '".$assurance."' AND idHopital = ".$hopital."");
+        $data = $req->fetch(PDO::FETCH_ASSOC);
+
+        if($data != Null){
+            $objet = new patient($data);
+            return $objet;
+        }
+        else{
+            echo '<script>alert("Se patient ne fait pas parti de cette hopital!")</script>';
+        }
+    }
 }

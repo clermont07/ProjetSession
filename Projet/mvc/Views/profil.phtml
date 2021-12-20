@@ -39,8 +39,12 @@ $result = $employerManager->getEmployer($idEmployer);
 $posteManager = new posteManager(connexion("bdd_hms"));
 $resultPoste = $posteManager->getPoste($result->getIdPoste());
 
+$_SESSION["idHopital"] = $result->getIdHopital();
+
 $hopitalManager = new hopitalManager(connexion("bdd_hms"));
 $resultHopital = $hopitalManager->getHopital($result->getIdHopital());
+
+$_SESSION["hopitalNom"] = $resultHopital->getNom();
 
 $departementManager = new departementManager(connexion("bdd_hms"));
 $resultDepartement = $departementManager->getDepartement($result->getIdDepartement());
@@ -75,6 +79,7 @@ $contenu2 .="<p>Hopital ".$resultHopital->getNom()."</p>";
 $contenu2 .="<p>Département : ".$resultDepartement->getDepartement()."</p>";
 $contenu2 .="<p>Employer No : ".$idEmployer."</p>";
 $contenu2 .="<p>".$result->getCourriel()."</p>";
-$contenu2 .="</div>";
+$contenu2 .="</div></div>";
 echo $contenu2;
 ?>
+<br><br><br>

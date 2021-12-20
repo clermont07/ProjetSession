@@ -11,3 +11,4 @@ class AccueilController extends Controller
         $this->view = 'accueil';
     }
 }
+?>
