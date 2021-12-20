@@ -38,5 +38,4 @@ class departementManager{
         }
         return false;
     }
-
 }

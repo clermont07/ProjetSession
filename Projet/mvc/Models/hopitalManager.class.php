@@ -38,5 +38,4 @@ class hopitalManager{
         }
         return false;
     }
-
 }

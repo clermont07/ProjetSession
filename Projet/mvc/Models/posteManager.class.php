@@ -28,5 +28,4 @@ class posteManager{
         }
         return false;
     }
-
 }

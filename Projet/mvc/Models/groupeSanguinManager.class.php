@@ -28,5 +28,4 @@ class groupeSanguinManager{
         }     
         return $sexe;  
     }
-
 }

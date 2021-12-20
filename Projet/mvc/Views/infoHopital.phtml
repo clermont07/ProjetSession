@@ -1,3 +1,10 @@
+<style>
+.card {box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);transition: 0.3s;width: 300px;border-radius: 5px;margin:0 auto;}
+.card:hover {box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);}
+img {border-radius: 5px 5px 0 0;width: 300px;height: 300px;}
+.container {width:100%;}
+</style>
+
 <div class="topnav">
     <a class="active" style="float:right" href="dashboard/projet/mvc/connection">Se connecter</a>
     <a class="active" style="float:right" href="dashboard/projet/mvc/inscription">Inscription</a>
@@ -9,17 +16,17 @@ $idHopital = $_GET["idHopital"];
 $hopitalManager = new hopitalManager(connexion("bdd_hms"));
 $result = $hopitalManager->getHopital($idHopital);
 
-    $contenu = "";
-    $contenu .="<br><br><br><center>";
-    $contenu .="<div class=card>";
-    $contenu .="    <img class=card-img-top src=".$result->getPhoto()." alt=Card image cap>";
-    $contenu .="    <div class=card-body>";
-    $contenu .="        <h3 class=card-title>".$result->getNom()."</h3>";
-    $contenu .="        <p class=card-text>Adresse : ".$result->getAdresse()."</p>";
-    $contenu .="        <p class=card-text>Ville : ".$result->getVille()."</p>";
-    $contenu .="        <p class=card-text>Code Postal : ".$result->getCodePostal()."</p>";
-    $contenu .="        <p class=card-text>Telephone : ".$result->getTelephone()."</p>";
-    $contenu .="    </div>";
-    $contenu .="</div></center><br><br><br>";
-    echo $contenu;
+$contenu = "";
+$contenu .="<br><br><br><center>";
+$contenu .="<div class=card>";
+$contenu .="    <img src=".$result->getPhoto()." alt=Avatar style=width:100%>";
+$contenu .="    <div class=container>";
+$contenu .="        <h3 class=card-title>".$result->getNom()."</h3>";
+$contenu .="        <p class=card-text>Adresse : ".$result->getAdresse()."</p>";
+$contenu .="        <p class=card-text>Ville : ".$result->getVille()."</p>";
+$contenu .="        <p class=card-text>Code Postal : ".$result->getCodePostal()."</p>";
+$contenu .="        <p class=card-text>Telephone : ".$result->getTelephone()."</p><br>";
+$contenu .="    </div>";
+$contenu .="</div></center><br><br><br>";
+echo $contenu;
 ?>

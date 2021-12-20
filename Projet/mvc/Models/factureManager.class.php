@@ -18,7 +18,4 @@ class factureManager{
     public function getDB(){
         return $this->_db;
     }
-
-    
-
 }

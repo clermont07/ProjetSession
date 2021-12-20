@@ -18,7 +18,4 @@ class prescriptionManager{
     public function getDB(){
         return $this->_db;
     }
-
-    
-
 }

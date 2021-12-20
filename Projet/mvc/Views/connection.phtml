@@ -1,8 +1,6 @@
 <?php
-    
 if (isset($_POST["connection"])){
     if (isset($_POST["pseudo"]) && isset($_POST["motDePasse"])){
-
         if($_POST["poste"] == "patient"){
             $array = array("pseudo" => $_POST['pseudo'],"motDePasse" => $_POST['motDePasse']);
             $patient = new patient($array);
@@ -17,7 +15,6 @@ if (isset($_POST["connection"])){
             $_SESSION['idPoste'] = $results->getIdPoste();
             $_SESSION['id'] = $results->getIdEmployer();
         }
-
         if ($results != false) 
         {
             $_SESSION['pseudo'] = $_POST['pseudo'];

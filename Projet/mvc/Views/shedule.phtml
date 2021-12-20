@@ -1,0 +1,102 @@
+<style>
+.center {  margin: auto;  width: 60%;  border: 3px solid lightskyblue;  padding: 10px;}
+.card1 {  float: left; background: rgba(0, 128, 0, 0.3);box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);  transition: 0.3s;  width: 300px;  border-radius: 5px;  padding: 10px;margin: 10px;}
+.card2 {  float: left; background: rgba(255,0,0, 0.3);box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);  transition: 0.3s;  width: 300px;  border-radius: 5px;  padding: 10px; margin: 10px; }
+.card1:hover {  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);}
+.card2:hover {  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);}
+.container {  width:100%;}
+</style>
+<?php
+include_once("./fonction.php");
+
+$sheduleManager = new sheduleManager(connexion("bdd_hms"));
+$resultShedule = $sheduleManager->getShedule($_SESSION["id"]);
+
+if(isset($_POST['cree'])){
+    if($_POST["jour"] < date("Y-m-d")){
+        echo '<script>alert("Entrer une date de shedule valide!")</script>';
+    }
+    else{
+        $creeShedule = $_POST['HeureDebut']." ".$_POST['tempsDebut']." à ".$_POST['HeureFin']." ".$_POST['tempsFin'];
+
+        $array = array( "Shedule" => $creeShedule,
+                        "NoEmployer" => $_SESSION["id"],
+                        "Jour" => $_POST['jour'],
+                        "Frais" => $_POST['frais'],
+                        "MaxPatient" => $_POST['patient']);
+
+        $shedule = new shedule($array);
+        $sheduleManager = new sheduleManager(connexion("bdd_hms"));
+        try{
+        $sheduleManager->insertion($shedule);
+        header("Location:shedule");
+        }
+        catch(Exception $e){
+            echo '<script>alert("Insertion échoué!")</script>';
+        }
+    }
+}
+
+if(isset($_POST['supprimer'])){
+    $array = array("idShedule" => $_POST['id']);
+
+    $shedule = new shedule($array);
+    $sheduleManager = new sheduleManager(connexion("bdd_hms"));
+
+    try{
+        $sheduleManager->supprimer($shedule);
+        header("Location:shedule");
+        }
+        catch(Exception $e){
+            echo '<script>alert("Suppression échoué!")</script>';
+        }
+}
+
+$contenu1  ="<br><form method=post >";
+$contenu1 .="<div class=center style=width:300px;>";
+$contenu1 .="<h4><b>Nouvelle Shedule</b></h4>";
+$contenu1 .="<p>Shedule <select name=HeureDebut style=width:40px;> </p>";
+for($i = 1 ; $i <= 12; $i++){
+    $contenu1 .="<option value=".$i.">".$i."</option>";
+}
+$contenu1 .="</select>";
+$contenu1 .="<select name=tempsDebut style=width:50px;>";
+$contenu1 .="<option value=AM >AM</option>";
+$contenu1 .="<option value=PM >PM</option>";
+$contenu1 .="</select> à ";
+$contenu1 .="<select name=HeureFin style=width:40px;>";
+for($a = 1 ; $a <= 12; $a++){
+    $contenu1 .="<option value=".$a.">".$a."</option>";
+}
+$contenu1 .="</select>";
+$contenu1 .="<select name=tempsFin style=width:50px;>";
+$contenu1 .="<option value=AM >AM</option>";
+$contenu1 .="<option value=PM >PM</option>";
+$contenu1 .="</select>";
+$contenu1 .="<p>Date &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=date name=jour style=width:178px; required></p>";
+$contenu1 .="<p>Frais &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=text name=frais pattern=[0-9]{,6} style=width:174px; required>$</p>";
+$contenu1 .="<p>Nb patient &nbsp;<select name=patient style=width:180px;></p>";
+for($b = 1 ; $b <= 5; $b++){
+    $contenu1 .="<option value=".$b.">".$b."</option>";
+}
+$contenu1 .="</select>";
+$contenu1 .="</select><br><br>";
+$contenu1 .="<center><input type=submit name=cree value=Créé></center>";
+$contenu1 .="</div>";
+$contenu1 .="</form><br><br><br>";
+echo $contenu1;
+
+
+foreach($resultShedule as $key => $value){
+    $contenu2  = ($value->getDisponibilite() == 1) ? "<div class=card1>":"<div class=card2>";
+    $contenu2 .="<form method='post'><div class=container>";
+    $contenu2 .="        <h3 class=card-title>".$value->getJour()."</h3><hr>";
+    $contenu2 .="        <p class=card-text style=background-color: green>Frais : ".$value->getFrais()."</p>";
+    $contenu2 .="        <p class=card-text>Shedule : ".$value->getShedule()."</p>";
+    $contenu2 .="        <p class=card-text>Place(s) restante(s) : ".$value->getCmpPatient()."</p>";
+    $contenu2 .="        <input type='hidden' name='id' value=".$value->getIdShedule().">";
+    $contenu2 .="        <input type='submit' name='supprimer' value='Supprimer'><br>";
+    $contenu2 .="    </div></div></form>";
+    echo $contenu2;
+}
+?>

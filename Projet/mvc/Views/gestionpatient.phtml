@@ -1,4 +1,6 @@
 <?php
+include_once("./fonction.php");
+
 $sexeManager = new sexeManager(connexion("bdd_hms"));
 $resultSexe = $sexeManager->getAllSexe();
 
@@ -6,17 +8,19 @@ $sangManager = new groupeSanguinManager(connexion("bdd_hms"));
 $resultSang = $sangManager->getAllSang();
 ?>
 
-<div class="topnav">
-    <a class="active" style="float:right" href="dashboard/projet/mvc/connection">Se connecter</a>
-    <a class="active" style="float:right" href="dashboard/projet/mvc/inscription">Inscription</a>
-    <a class="active" style="float:right" href="dashboard/projet/mvc/accueil">Accueil</a>
-</div>
-
 <center>
 <div>
     <form method="post">
-        <h1 style=color:black>Inscription</h1>
+        <h1 style=color:black>Gestion compte patient</h1>
         <table>
+            <tr>
+                <td>Numéro Responsable : </td>
+                <td><?php echo $_SESSION["id"]; ?></td>
+            </tr>
+            <tr>
+                <td>Hopital  </td>
+                <td><input type="text" name="hopital" maxlength='30' required></td>
+            </tr>
             <tr>
                 <td>Prénom  </td>
                 <td><input type="text" name="prenom" maxlength='30' required></td>

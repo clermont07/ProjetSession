@@ -54,6 +54,5 @@ class employerManager{
         $query->bindValue(":pseudo",$employer->getPseudo());
         $query->bindValue(":motDePasse",$employer->getMotDePasse());
         $query->execute();
-        
     }
 }

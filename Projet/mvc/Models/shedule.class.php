@@ -1,7 +1,7 @@
 <?php
     class shedule 
     {
-        private $_idShedule,$_noEmployer,$_shedule,$_jour,$_frais,$_maxPatient,$_cmpPatient,$_disponibiliter;
+        private $_idShedule,$_noEmployer,$_shedule,$_jour,$_frais,$_maxPatient,$_cmpPatient,$_disponibilite;
 
         public function __construct(array $donnee = array()){
             if(!empty($donnee)){
@@ -15,8 +15,8 @@
         public function getShedule(){  return $this->_shedule;}
         public function setShedule ($shedule){$this->_shedule = $shedule;} 
 
-        public function getDisponibiliter(){  return $this->_disponibiliter;}
-        public function setDisponibiliter ($disponibiliter){$this->_disponibiliter = $disponibiliter;} 
+        public function getDisponibilite(){  return $this->_disponibilite;}
+        public function setDisponibilite ($disponibilite){$this->_disponibilite = $disponibilite;} 
 
         public function getCmpPatient(){  return $this->_cmpPatient;}
         public function setCmpPatient ($cmpPatient){$this->_cmpPatient = $cmpPatient;} 

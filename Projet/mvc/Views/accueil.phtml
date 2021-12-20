@@ -15,8 +15,8 @@
     <div class=tRosemont><h2><?php echo $result[2]->getNom();?></h2></div>
     <div class=tTalon><h2><?php echo $result[3]->getNom();?></h2></div>
 </div>
-<div class="items">
 
+<div class="items">
     <span class="imgSante">
         <?php
             $contenu0 ="<a href=dashboard/projet/mvc/infoHopital?idHopital='".$result[0]->getIdHopital()."'>";
@@ -24,7 +24,6 @@
             echo $contenu0;
         ?>
     </span>
-
     <span class="imgCoeur">
         <?php
             $contenu1 ="<a href=dashboard/projet/mvc/infoHopital?idHopital='".$result[1]->getIdHopital()."'>";
@@ -32,7 +31,6 @@
             echo $contenu1;
         ?>
     </span>
-
     <span class="imgRosemont">
         <?php
             $contenu2 ="<a href=dashboard/projet/mvc/infoHopital?idHopital='".$result[2]->getIdHopital()."'>";
@@ -40,7 +38,6 @@
             echo $contenu2;
         ?>
     </span> 
-
     <span class="imgTalon">
         <?php
             $contenu3 ="<a href=dashboard/projet/mvc/infoHopital?idHopital='".$result[3]->getIdHopital()."'>";
@@ -49,3 +46,4 @@
         ?>
     </span>
 </div>
+<br><br>

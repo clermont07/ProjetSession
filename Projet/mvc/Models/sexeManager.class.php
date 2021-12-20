@@ -28,5 +28,4 @@ class sexeManager{
         }     
         return $sexe;  
     }
-
 }

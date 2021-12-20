@@ -18,7 +18,4 @@ class rendezvousManager{
     public function getDB(){
         return $this->_db;
     }
-
-    
-
 }

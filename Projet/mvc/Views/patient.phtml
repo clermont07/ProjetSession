@@ -1,0 +1,127 @@
+<?php
+include_once("./fonction.php");
+
+$sexeManager = new sexeManager(connexion("bdd_hms"));
+$resultSexe = $sexeManager->getAllSexe();
+
+$sangManager = new groupeSanguinManager(connexion("bdd_hms"));
+$resultSang = $sangManager->getAllSang();
+?>
+
+<center>
+<div>
+    <form method="post">
+        <h1 style=color:black>Gestion compte patient</h1>
+        <table>
+            <tr>
+                <td>Prenom  </td>
+                <td><input type="text" name="prenom" maxlength='30' required></td>
+            </tr>
+            <tr>
+                <td>Nom  </td>
+                <td><input type="text" name="nom" maxlength='30' required></td>
+            </tr>
+            <tr>
+                <td>Telephone  </td>
+                <td><input type="text" name="telephone" pattern="[0-9]{10}" placeholder="5140000000" required></td>
+            </tr>
+            <tr>
+                <td>Adresse  </td>
+                <td><input type="text" name="adresse" maxlength='100' required></td>
+            </tr>
+            <tr>
+                <td>Ville  </td>
+                <td><input type="text" name="ville" maxlength='50' required></td>
+            </tr>
+            <tr>
+                <td>Code Postal  </td>
+                <td><input type="text" name="codePostal" pattern="[A-Z]{1}[0-9]{1}[A-Z]{1}[0-9]{1}[A-Z]{1}[0-9]{1}" placeholder="X1X1X1" required></td>
+            </tr>
+            <tr>
+                <td>Sexe  </td>
+                <td>
+                <?php
+                $contenu ="<select name=sexe style=width:100%;>";
+                foreach($resultSexe as $key => $value){
+                    $contenu .="<option value=".$value->getIdSexe().">".$value->getGenre()."</option>";
+                }
+                $contenu .="</select>";
+                echo $contenu;
+                ?>
+            </tr>
+            <tr>
+                <td>Groupe Sanguin  </td>
+                <td>
+                <?php
+                $contenu1 ="<select name=grpSang style=width:100%;>";
+                foreach($resultSang as $key => $value){
+                    $contenu1 .="<option value=".$value->getIdGrpSang().">".$value->getGroupeSanguin()."</option>";
+                }
+                $contenu1 .="</select>";
+                echo $contenu1;
+                ?>
+                </td>
+            </tr>
+            <tr>
+                <td>Assurance Maladie  </td>
+                <td><input type="text" name="assuranceMaladie" pattern="[A-Z]{4}[0-9]{8}" placeholder="AAAA12345678" maxlength='20' required></td>
+            </tr>
+            <tr>
+                <td>Pays de naissance  </td>
+                <td><input type="text" name="paysNaissance" maxlength='50' required></td>
+            </tr>
+            <tr>
+                <td>Date de naissance  </td>
+                <td><input type="date" name="dateNaissance" style="width:97%;" required></td>
+            </tr>
+            <tr>
+                <td>Pseudo  </td>
+                <td><input type="text" name="pseudo" minlength="6" maxlength='30' required></td>
+            </tr>
+            <tr>
+                <td>Mot de passe  </td>
+                <td><input type="password" name="motDePasse" minlength="6" maxlength='30' required></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="submit" name="inscrire" value="Inscrire"></td>
+            </tr>
+        <table>
+    </form>
+
+    <?php
+        if(isset($_POST['inscrire'])){
+            if($_POST["dateNaissance"] > date("Y-m-d")){
+                echo '<script>alert("Entrer une date de naissance valide!")</script>';
+            }
+            else{
+                $array = array("prenom" => trim($_POST['prenom']),
+                "nom" => trim($_POST['nom']),
+                "telephone" => trim($_POST['telephone']),
+                "adresse" => trim($_POST['adresse']),
+                "ville" => trim($_POST['ville']),
+                "codePostal" => trim($_POST['codePostal']),
+                "idSexe" => $_POST['sexe'],
+                "idGrpSang" => $_POST['grpSang'],
+                "assuranceMaladie" => trim($_POST['assuranceMaladie']),
+                "paysNaissance" => trim($_POST['paysNaissance']),
+                "dateNaissance" => $_POST['dateNaissance'],
+                "pseudo" => trim($_POST['pseudo']),
+                "motDePasse" => trim($_POST['motDePasse']));
+
+                $patient = new patient($array);
+                $patientManager = new patientManager(connexion("bdd_hms"));
+                try{
+                $patientManager->insertion($patient);
+                echo "<center><p style=color:green;>Bonjour ".$_POST["prenom"].", vous êtes inscrit!</p></center>";
+                }
+                catch(Exception $e){
+                    echo '<script>alert("Insertion échoué! Pseudo ou Assurance maladie est déjà utilisé!")</script>';
+                }
+            }
+        }
+    ?>
+</div>
+</center>
+<br><br><br>
+

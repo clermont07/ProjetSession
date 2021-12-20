@@ -11,3 +11,4 @@ class ProfilController extends Controller
         $this->view = 'profil';
     }
 }
+?>
