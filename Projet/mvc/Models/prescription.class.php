@@ -8,6 +8,14 @@
                 $this->hydrate($donnee);
             }
         }
+        public function getIdHopital(){  return $this->_idHopital;}
+        public function setIdHopital ($idHopital){$this->_idHopital = $idHopital;} 
+
+        public function getIdEmployer(){  return $this->_idEmployer;}
+        public function setIdEmployer ($idEmployer){$this->_idEmployer = $idEmployer;} 
+
+        public function getIdPatient(){  return $this->_idPatient;}
+        public function setIdPatient ($idPatient){$this->_idPatient = $idPatient;} 
 
         public function getIdPrescription(){  return $this->_idPrescription;}
         public function setIdPrescription ($idPrescription){$this->_idPrescription = $idPrescription;} 

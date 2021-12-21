@@ -81,7 +81,7 @@ $resultSang = $sangManager->getAllSang();
             </tr>
             <tr>
                 <td>Description  </td>
-                <td><textarea name="description" name="description" id="description" maxlength='500' style="width:71%"></textarea></td>
+                <td><textarea name="description" id="description" maxlength='500' style="width:71%"></textarea></td>
             </tr>
             <tr>
                 <td>Pays de naissance  </td>
@@ -145,23 +145,25 @@ $resultSang = $sangManager->getAllSang();
             $patient = new patient($array);
             $patientManager = new patientManager(connexion("bdd_hms"));
             $result = $patientManager->getGestionPatient($patient);
-            $_SESSION['idPatient'] = $result->getIdPatient();
-            ?>
-            <script>document.getElementById("prenom").value = '<?php  echo $result->getPrenom(); ?>'</script>
-            <script>document.getElementById("nom").value = '<?php  echo $result->getNom(); ?>'</script>
-            <script>document.getElementById("telephone").value = '<?php  echo $result->getTelephone(); ?>'</script>
-            <script>document.getElementById("adresse").value = '<?php  echo $result->getAdresse(); ?>'</script>
-            <script>document.getElementById("ville").value = '<?php  echo $result->getVille(); ?>'</script>
-            <script>document.getElementById("codePostal").value = '<?php  echo $result->getCodePostal(); ?>'</script>
-            <script>document.getElementById("sexe").value = '<?php  echo $result->getIdSexe(); ?>'</script>
-            <script>document.getElementById("grpSang").value = '<?php  echo $result->getIdGrpSang(); ?>'</script>
-            <script>document.getElementById("assuranceMaladie").value = '<?php  echo $result->getAssuranceMaladie(); ?>'</script>
-            <script>document.getElementById("description").value = '<?php  echo $result->getDescription(); ?>'</script>
-            <script>document.getElementById("paysNaissance").value = '<?php  echo $result->getPaysNaissance(); ?>'</script>
-            <script>document.getElementById("dateNaissance").value = '<?php  echo $result->getDateNaissance(); ?>'</script>
-            <script>document.getElementById("pseudo").value = '<?php  echo $result->getPseudo(); ?>'</script>
-            <script>document.getElementById("motDePasse").value = '<?php  echo $result->getMotDePasse(); ?>'</script>
-            <?php
+            if($result != null){
+                $_SESSION['idPatient'] = $result->getIdPatient();
+                ?>
+                <script>document.getElementById("prenom").value = '<?php  echo $result->getPrenom(); ?>'</script>
+                <script>document.getElementById("nom").value = '<?php  echo $result->getNom(); ?>'</script>
+                <script>document.getElementById("telephone").value = '<?php  echo $result->getTelephone(); ?>'</script>
+                <script>document.getElementById("adresse").value = '<?php  echo $result->getAdresse(); ?>'</script>
+                <script>document.getElementById("ville").value = '<?php  echo $result->getVille(); ?>'</script>
+                <script>document.getElementById("codePostal").value = '<?php  echo $result->getCodePostal(); ?>'</script>
+                <script>document.getElementById("sexe").value = '<?php  echo $result->getIdSexe(); ?>'</script>
+                <script>document.getElementById("grpSang").value = '<?php  echo $result->getIdGrpSang(); ?>'</script>
+                <script>document.getElementById("assuranceMaladie").value = '<?php  echo $result->getAssuranceMaladie(); ?>'</script>
+                <script>document.getElementById("description").value = '<?php  echo $result->getDescription(); ?>'</script>
+                <script>document.getElementById("paysNaissance").value = '<?php  echo $result->getPaysNaissance(); ?>'</script>
+                <script>document.getElementById("dateNaissance").value = '<?php  echo $result->getDateNaissance(); ?>'</script>
+                <script>document.getElementById("pseudo").value = '<?php  echo $result->getPseudo(); ?>'</script>
+                <script>document.getElementById("motDePasse").value = '<?php  echo $result->getMotDePasse(); ?>'</script>
+                <?php
+            }
         }
         if(isset($_POST['modifier'])){
             if($_POST["dateNaissance"] > date("Y-m-d")){

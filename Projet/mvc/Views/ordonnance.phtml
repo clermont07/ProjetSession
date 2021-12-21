@@ -1,3 +1,101 @@
+<style>
+#btnPrescrire {  background-color: lightskyblue;  border: none;  color: white;  padding: 16px 32px;  text-align: center;  font-size: 16px;  margin: 4px 2px;  opacity: 0.6;  transition: 0.3s;  display: inline-block;  text-decoration: none;  cursor: pointer;}
+#btnPrescrire:hover {opacity: 1;color:black}
+</style>
+
 <?php
 include_once("./fonction.php");
+
+$idEmployer = $_SESSION["id"];
+
+$employerManager = new employerManager(connexion("bdd_hms"));
+$result = $employerManager->getEmployer($idEmployer);
+
+$hopitalManager = new hopitalManager(connexion("bdd_hms"));
+$resultHopital = $hopitalManager->getHopital($result->getIdHopital());
+
+?>
+<br>
+<center>
+<form method="post">
+Recherche patient <input type="text" name="assuranceMaladieTrouver" style="width:200px"; pattern="[A-Z]{4}[0-9]{8}" placeholder="AAAA12345678" maxlength='20' required><input type="submit" name="trouver" value="Trouver"></td>
+</form>
+
+<br><br>
+<form method="post">
+<table style="border: 5px solid lightskyblue;width: 600px;">
+<tr>
+    <td colspan="2"><center><h1><b><?php echo '<p style="color:blue">'.$_SESSION["hopitalNom"].' </p> '?></b></h1><center></td>
+</tr>
+<tr>
+    <td style="width: 50%;"><h3><b>Medecin</b> <?php echo $result->getNom()." ".$result->getPrenom()  ;?></h3></td>
+    <td>  &emsp; &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<?php echo date("Y-m-d");?> <td>
+</tr>
+<tr>
+    <td style="width: 50%;"><b><?php echo $resultHopital->getNom();?></b></td>
+</tr>
+<tr>
+    <td style="width: 50%;"><b><?php echo $resultHopital->getAdresse();?></b></td>
+</tr>
+<tr>
+    <td style="width: 50%;"><b><?php echo $resultHopital->getVille();?></b></td>
+</tr>
+<tr>
+    <td style="width: 50%;"><b><?php echo $resultHopital->getCodePostal();?></b></td>
+</tr>
+<tr>
+    <td style="width: 50%;"><b><?php echo $resultHopital->getTelephone();?></b></td>
+</tr>
+<tr>
+    <td  colspan="2"><hr style="height:2px;color:blue;background-color:blue"><br></td>
+</tr>
+<?php
+if(isset($_POST['trouver'])){
+    $array = array("assuranceMaladie" => $_POST['assuranceMaladieTrouver'],"idHopital" => $_SESSION['idHopital']);
+    $patient = new patient($array);
+    $patientManager = new patientManager(connexion("bdd_hms"));
+    $resultPatient = $patientManager->getGestionPatient($patient);
+    if($resultPatient != null){
+        $_SESSION['idPatient'] = $resultPatient->getIdPatient();?>
+            <tr>
+                <td>Nom patient :<?php  echo $resultPatient->getNom(); ?></td>
+                <td>&emsp;&emsp;&emsp;Numéro téléphone :<?php  echo $resultPatient->getTelephone(); ?></td>
+            </tr>
+            <tr>
+            <td  colspan="2"><h3 style="color:blue">Prescription</h3><br></td>
+            </tr>
+            <tr>
+            <td  colspan="2"><textarea name="description"  maxlength='500' style="width:100%;" required></textarea></td>
+            </tr>
+            <tr>
+            <td><b>Signé :</b> <?php echo $result->getPrenom();?></td>
+            </tr>
+            <tr>
+            <td  colspan="2"><center><input type="submit" name="prescrire" value="Prescrire" id="btnPrescrire"></center></td>
+            </tr>
+        </table>
+        </form>
+        <?php
+    }
+}
+?>
+</center>
+<?php
+if(isset($_POST['prescrire'])){
+    $array = array("date" => date("Y-m-d"),
+    "description" => trim($_POST['description']),
+    "idHopital" => $_SESSION["idHopital"],
+    "idEmployer" => $_SESSION["id"],
+    "idPatient" => $_SESSION['idPatient']);
+
+    $prescription = new prescription($array);
+    $prescriptionManager = new prescriptionManager(connexion("bdd_hms"));
+    try{
+        $prescriptionManager->insertion($prescription);
+        echo "<center><p style=color:green;>Prescription envoyée!</p></center>";
+    }
+    catch(Exception $e){
+        echo '<script>alert("Insertion échoué!")</script>';
+    }
+}
 ?>
