@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : mer. 08 déc. 2021 à 20:10
+-- Généré le : jeu. 23 déc. 2021 à 19:32
 -- Version du serveur :  10.4.17-MariaDB
 -- Version de PHP : 8.0.2
 
@@ -67,6 +67,15 @@ CREATE TABLE `employer` (
   `MotDePasse` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Déchargement des données de la table `employer`
+--
+
+INSERT INTO `employer` (`idEmployer`, `idDepartement`, `idHopital`, `idPoste`, `Nom`, `Prenom`, `Courriel`, `Photo`, `Pseudo`, `MotDePasse`) VALUES
+(1, 6, 1, 3, 'Tremblay', 'Sara', 'sara@hotmail.com', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuWkdf_BSXN0mgbLuL-oZFlBZePWgLAbSX4w&usqp=CAU', 'sarasara', 'sarasara'),
+(2, 10, 2, 2, 'admin', 'admin', 'admin@hotmail.com', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD6-JhRPAx1Q0nw93zTfAth-DqzDe1HyVB8g&usqp=CAU', 'administration', 'administration'),
+(3, 3, 1, 1, 'Vallaint', 'Thomas', 'tomma@hotmail.com', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMzqS2wZVVyZET3UCJWdM6pmvXEf45NTLLqQ&usqp=CAU', 'medecin', 'medecin');
+
 -- --------------------------------------------------------
 
 --
@@ -128,10 +137,10 @@ CREATE TABLE `hopital` (
 --
 
 INSERT INTO `hopital` (`idHopital`, `Nom`, `Adresse`, `Ville`, `CodePostal`, `Telephone`, `Photo`) VALUES
-(1, 'Hôpital de la Cité-de-la-Santé', '1755 Bd René-Laennec', 'Laval', ' H7M 3L9', '(450) 668-1010', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTx2yjpzLYQsp9SsQmudqFYbIYUhi2GKV1MmA&usqp=CAU'),
-(2, 'Hôpital du Sacré-Cœur de Montréal', '5400 Boul Gouin O', 'Montréal', 'H4J 1C5', '(514) 338-2222', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSk-6fLcnTH79n5nZdKOatXVH03CM-E8QToA&usqp=CAU'),
-(3, 'Hôpital Maisonneuve-Rosemont', '5415 Assumption Blvd', 'Montreal', 'H1T 2M4', '(514) 252-3400', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTK-mGYWrjoNDViJ0tI2O4_T5GLyavAYH9EaQ&usqp=CAU'),
-(4, 'Hôpital Jean-Talon', '1385 Rue Jean-Talon E', 'Montréal', 'H2E 1S6', '(514) 495-6767', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTs4-bSBuSt16zPGXQrOQN_B5pUR6Ze1jUfIQ&usqp=CAU');
+(1, 'Cité-de-la-Santé', '1755 Bd René-Laennec', 'Laval', ' H7M 3L9', '(450) 668-1010', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTx2yjpzLYQsp9SsQmudqFYbIYUhi2GKV1MmA&usqp=CAU'),
+(2, 'Sacré-Cœur de Montréal', '5400 Boul Gouin O', 'Montréal', 'H4J 1C5', '(514) 338-2222', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSk-6fLcnTH79n5nZdKOatXVH03CM-E8QToA&usqp=CAU'),
+(3, 'Maisonneuve-Rosemont', '5415 Assumption Blvd', 'Montreal', 'H1T 2M4', '(514) 252-3400', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTK-mGYWrjoNDViJ0tI2O4_T5GLyavAYH9EaQ&usqp=CAU'),
+(4, 'Jean-Talon', '1385 Rue Jean-Talon E', 'Montréal', 'H2E 1S6', '(514) 495-6767', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTs4-bSBuSt16zPGXQrOQN_B5pUR6Ze1jUfIQ&usqp=CAU');
 
 -- --------------------------------------------------------
 
@@ -151,15 +160,23 @@ CREATE TABLE `patient` (
   `Prenom` varchar(30) NOT NULL,
   `Telephone` varchar(20) NOT NULL,
   `DateNaissance` date NOT NULL,
-  `PaysNaissance` date NOT NULL,
+  `PaysNaissance` varchar(50) NOT NULL,
   `Adresse` varchar(100) NOT NULL,
   `CodePostal` varchar(10) NOT NULL,
   `Ville` varchar(50) NOT NULL,
   `Description` varchar(500) NOT NULL,
-  `AssuranceMaladie` bigint(20) NOT NULL,
+  `AssuranceMaladie` varchar(20) NOT NULL,
   `Pseudo` varchar(30) NOT NULL,
   `MotDePasse` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Déchargement des données de la table `patient`
+--
+
+INSERT INTO `patient` (`idPatient`, `idSexe`, `idGrpSang`, `idPrescription`, `idFacture`, `idHopital`, `idEmployer`, `Nom`, `Prenom`, `Telephone`, `DateNaissance`, `PaysNaissance`, `Adresse`, `CodePostal`, `Ville`, `Description`, `AssuranceMaladie`, `Pseudo`, `MotDePasse`) VALUES
+(13, 3, 5, 0, 0, 1, 0, 'Yanick', 'Clermont', '5147753731', '2021-12-03', 'Canada', '7275 Rue Andre Breton', 'B1B1B1', 'Laval', 'Malade', 'CLEY12345678', 'yanick', 'yanick'),
+(14, 2, 1, 0, 0, 1, 1, 'yanick', 'clermont', '5147753732', '2021-12-12', 'sa', '7275 rue andre breton', 'X1X1X1', 'laval', 'sasa', 'CLEY12345666', 'cococo', 'cococo');
 
 -- --------------------------------------------------------
 
@@ -177,8 +194,8 @@ CREATE TABLE `poste` (
 --
 
 INSERT INTO `poste` (`idPoste`, `Poste`) VALUES
-(2, 'administrateur'),
-(3, 'infirmiere'),
+(2, 'Administrateur'),
+(3, 'Infirmiere'),
 (1, 'Medecin');
 
 -- --------------------------------------------------------
@@ -190,8 +207,19 @@ INSERT INTO `poste` (`idPoste`, `Poste`) VALUES
 CREATE TABLE `prescription` (
   `idPrescription` int(11) NOT NULL,
   `Date` date NOT NULL,
-  `idPosologie` int(11) NOT NULL
+  `Description` varchar(500) NOT NULL,
+  `idHopital` int(11) NOT NULL,
+  `idEmployer` int(11) NOT NULL,
+  `idPatient` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Déchargement des données de la table `prescription`
+--
+
+INSERT INTO `prescription` (`idPrescription`, `Date`, `Description`, `idHopital`, `idEmployer`, `idPatient`) VALUES
+(1, '2021-12-21', 'vaccin covid', 1, 3, 13),
+(2, '2021-12-21', '2 tylenol', 1, 3, 13);
 
 -- --------------------------------------------------------
 
@@ -201,8 +229,18 @@ CREATE TABLE `prescription` (
 
 CREATE TABLE `rendezvous` (
   `idShedule` int(11) NOT NULL,
-  `idPatient` int(11) NOT NULL
+  `idPatient` int(11) NOT NULL,
+  `idEmployer` int(11) NOT NULL,
+  `idRendezvous` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Déchargement des données de la table `rendezvous`
+--
+
+INSERT INTO `rendezvous` (`idShedule`, `idPatient`, `idEmployer`, `idRendezvous`) VALUES
+(8, 14, 3, 1),
+(15, 13, 3, 2);
 
 -- --------------------------------------------------------
 
@@ -220,9 +258,9 @@ CREATE TABLE `sexe` (
 --
 
 INSERT INTO `sexe` (`idSexe`, `Genre`) VALUES
-(3, 'Autre'),
+(2, 'Autre'),
 (1, 'Femme'),
-(2, 'Homme');
+(3, 'Homme');
 
 -- --------------------------------------------------------
 
@@ -238,8 +276,18 @@ CREATE TABLE `shedule` (
   `Frais` double NOT NULL,
   `maxPatient` int(11) NOT NULL,
   `cmpPatient` int(11) NOT NULL,
-  `Disponibilite` tinyint(1) NOT NULL
+  `Disponibilite` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Déchargement des données de la table `shedule`
+--
+
+INSERT INTO `shedule` (`idShedule`, `Jour`, `NoEmployer`, `Shedule`, `Frais`, `maxPatient`, `cmpPatient`, `Disponibilite`) VALUES
+(1, '2021-12-20', '1', '9 AM à 1 PM', 300, 5, 5, 1),
+(3, '2021-12-19', '1', '1 AM à 1 AM', 999, 4, 4, 1),
+(8, '2021-12-21', '3', '1 AM à 1 AM', 500, 4, 3, 1),
+(15, '2021-12-30', '3', '5 PM à 7 PM', 566, 3, 2, 1);
 
 --
 -- Index pour les tables déchargées
@@ -257,7 +305,8 @@ ALTER TABLE `departement`
 --
 ALTER TABLE `employer`
   ADD PRIMARY KEY (`idEmployer`),
-  ADD UNIQUE KEY `Courriel` (`Courriel`,`Pseudo`);
+  ADD UNIQUE KEY `Courriel` (`Courriel`),
+  ADD UNIQUE KEY `Pseudo` (`Pseudo`);
 
 --
 -- Index pour la table `facture`
@@ -284,7 +333,8 @@ ALTER TABLE `hopital`
 --
 ALTER TABLE `patient`
   ADD PRIMARY KEY (`idPatient`),
-  ADD KEY `AssuranceMaladie` (`AssuranceMaladie`,`Pseudo`);
+  ADD UNIQUE KEY `AssuranceMaladie` (`AssuranceMaladie`),
+  ADD UNIQUE KEY `Pseudo` (`Pseudo`);
 
 --
 -- Index pour la table `poste`
@@ -303,7 +353,7 @@ ALTER TABLE `prescription`
 -- Index pour la table `rendezvous`
 --
 ALTER TABLE `rendezvous`
-  ADD PRIMARY KEY (`idShedule`);
+  ADD PRIMARY KEY (`idRendezvous`);
 
 --
 -- Index pour la table `sexe`
@@ -332,7 +382,7 @@ ALTER TABLE `departement`
 -- AUTO_INCREMENT pour la table `employer`
 --
 ALTER TABLE `employer`
-  MODIFY `idEmployer` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idEmployer` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT pour la table `facture`
@@ -356,7 +406,7 @@ ALTER TABLE `hopital`
 -- AUTO_INCREMENT pour la table `patient`
 --
 ALTER TABLE `patient`
-  MODIFY `idPatient` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idPatient` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT pour la table `poste`
@@ -368,7 +418,13 @@ ALTER TABLE `poste`
 -- AUTO_INCREMENT pour la table `prescription`
 --
 ALTER TABLE `prescription`
-  MODIFY `idPrescription` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idPrescription` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT pour la table `rendezvous`
+--
+ALTER TABLE `rendezvous`
+  MODIFY `idRendezvous` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT pour la table `sexe`
@@ -380,7 +436,7 @@ ALTER TABLE `sexe`
 -- AUTO_INCREMENT pour la table `shedule`
 --
 ALTER TABLE `shedule`
-  MODIFY `idShedule` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idShedule` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

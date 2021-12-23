@@ -36,6 +36,16 @@ class patientManager{
         }
     }
 
+    public function getPatient($id){
+        $req = $this->_db->query("SELECT * FROM patient WHERE idPatient = ".$id."");
+        $data=$req->fetch(PDO::FETCH_ASSOC);
+        if($data !== Null){
+            $obj1 = new patient($data);
+            return $obj1;
+        }
+        return false;
+    }
+
     public function insertion(patient $patient) 
     {
         $query = $this->_db->prepare("INSERT into patient(Prenom,Nom,Telephone,Adresse,Ville,CodePostal,idSexe,idGrpSang,AssuranceMaladie,PaysNaissance,DateNaissance,Pseudo,MotDePasse) VALUES (:prenom,:nom,:telephone,:adresse,:ville,:codePostal,:sexe,:grpSang,:assuranceMaladie,:paysNaissance,:dateNaissance,:pseudo,:motDePasse)"); 
@@ -57,7 +67,6 @@ class patientManager{
 
     public function gestionPatientModifier(patient $patient) 
     {
-        echo $patient->getMotDePasse();
         $query = $this->_db->prepare("UPDATE patient SET Description = (:description),Prenom = (:prenom),Nom = (:nom),Telephone = (:telephone),Adresse = (:adresse),Ville = (:ville),CodePostal = (:codePostal),idSexe = (:sexe),idGrpSang = (:grpSang),AssuranceMaladie = (:assuranceMaladie),PaysNaissance = (:paysNaissance),DateNaissance = (:dateNaissance),Pseudo = (:pseudo),MotDePasse = (:motDePasse) WHERE idPatient = (:idPatient)"); 
         $query->bindValue(":idPatient",$patient->getIdPatient());
         $query->bindValue(":description",$patient->getDescription());

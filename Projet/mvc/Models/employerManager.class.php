@@ -55,4 +55,14 @@ class employerManager{
         $query->bindValue(":motDePasse",$employer->getMotDePasse());
         $query->execute();
     }
+
+    public function getInfirmiere($poste){
+        $query = $this->_db->query("SELECT * FROM employer WHERE idPoste = ".$poste."");
+        $employer = array();
+        
+        while($data=$query->fetch(PDO::FETCH_ASSOC)){
+            $employer[] = new employer($data);
+        }     
+        return $employer;  
+    }
 }

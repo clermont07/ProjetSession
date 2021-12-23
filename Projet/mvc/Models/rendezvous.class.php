@@ -1,13 +1,18 @@
 <?php
     class rendezvous 
     {
-        private $_idRendezvous,$_idPatient;
+        private $_idRendezvous,$_idPatient,$_idShedule,$_idEmployer;
 
         public function __construct(array $donnee = array()){
             if(!empty($donnee)){
                 $this->hydrate($donnee);
             }
         }
+        public function getIdEmployer(){  return $this->_idEmployer;}
+        public function setIdEmployer ($idEmployer){$this->_idEmployer = $idEmployer;} 
+
+        public function getIdShedule(){  return $this->_idShedule;}
+        public function setIdShedule ($idShedule){$this->_idShedule = $idShedule;} 
 
         public function getIdRendezvous(){  return $this->_idRendezvous;}
         public function setIdRendezvous ($idRendezvous){$this->_idRendezvous = $idRendezvous;} 

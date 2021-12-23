@@ -1,7 +1,7 @@
 <?php
     class prescription 
     {
-        private $_idPrescription,$_date,$_description;
+        private $_idPrescription,$_date,$_description,$_idHopital,$_idEmployer,$_idPatient;
 
         public function __construct(array $donnee = array()){
             if(!empty($donnee)){
