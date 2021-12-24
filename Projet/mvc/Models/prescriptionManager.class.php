@@ -30,4 +30,14 @@ class prescriptionManager{
         $query->bindValue(":idPatient",$prescription->getIdPatient());
         $query->execute();
     }
+
+    public function getPrescription($id){
+        $query = $this->_db->query("SELECT * FROM prescription WHERE idPatient = ".$id."");
+        $prescription = array();
+        
+        while($data=$query->fetch(PDO::FETCH_ASSOC)){
+            $prescription[] = new prescription($data);
+        }     
+        return $prescription;  
+    }
 }

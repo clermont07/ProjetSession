@@ -63,6 +63,15 @@ class employerManager{
         while($data=$query->fetch(PDO::FETCH_ASSOC)){
             $employer[] = new employer($data);
         }     
+        return $employer;
+    }
+    public function getMedecin($poste){
+        $query = $this->_db->query("SELECT * FROM employer WHERE idPoste = ".$poste."");
+        $employer = array();
+        
+        while($data=$query->fetch(PDO::FETCH_ASSOC)){
+            $employer[] = new employer($data);
+        }     
         return $employer;  
     }
 }

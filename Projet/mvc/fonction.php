@@ -38,3 +38,14 @@ elseif( $_SESSION['idPoste'] == 2 ){
 </div>
 <?php 
 }
+elseif( $_SESSION['idPoste'] == 0 ){
+    ?>
+    <div class="topnav">
+        <a class="active" style="float:right" href="dashboard/projet/mvc/deco">Déconnexion</a>
+        <a class="active" style="float:right" href="dashboard/projet/mvc/patient">Liste de medecin</a>
+        <a class="active" style="float:right" href="dashboard/projet/mvc/prescription">Prescription</a>
+        <a class="active" style="float:right" href="dashboard/projet/mvc/facture">Facture</a>
+        <a class="active" style="float:right" href="dashboard/projet/mvc/profilPatient">Profil</a>
+    </div>
+    <?php 
+}

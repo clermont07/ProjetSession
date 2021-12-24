@@ -24,7 +24,7 @@ class patientManager{
         $pseudo = $patient->getPseudo();
         $motDePasse = $patient->getMotDePasse();
 
-        $req = $this->_db->query("SELECT Pseudo , MotDePasse FROM patient WHERE  Pseudo='".$pseudo."' AND MotDePasse='".$motDePasse."'");
+        $req = $this->_db->query("SELECT idPatient,Pseudo , MotDePasse FROM patient WHERE  Pseudo='".$pseudo."' AND MotDePasse='".$motDePasse."'");
         $data = $req->fetch(PDO::FETCH_ASSOC);
 
         if($data != Null){

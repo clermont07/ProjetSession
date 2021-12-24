@@ -1,127 +1,85 @@
+<style>
+.card { float:left;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);  transition: 0.3s;  width: 300px;  border-radius: 5px;  padding: 20px; margin:10 auto;}
+.card:hover {  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);}
+img {  border-radius: 5px 5px 0 0;  width: 300px;  height: 400px;}
+.container {  width:100%;}
+#right {  float:right;  border: 3px solid lightskyblue;}
+
+.center1 {  margin: auto;  width: 60%;  border: 3px solid lightskyblue;  padding: 10px;}
+.card1 {  float: left; background: rgba(0, 128, 0, 0.3);box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);  transition: 0.3s;  width: 300px;  border-radius: 5px;  padding: 10px;margin: 10px;}
+.card1:hover {  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);}
+.container1 {  width:100%;}
+</style>
 <?php
 include_once("./fonction.php");
+$mode = 0;
+$employerManager = new employerManager(connexion("bdd_hms"));
+$result = $employerManager->getMedecin(1);
 
-$sexeManager = new sexeManager(connexion("bdd_hms"));
-$resultSexe = $sexeManager->getAllSexe();
+if(isset($_POST["shedule"])){
+    $mode = 1;
+    $sheduleManager = new sheduleManager(connexion("bdd_hms"));
+    $resultShedule = $sheduleManager->getSheduleDispo($_POST["idEmployer"]);
+    foreach($resultShedule as $key => $value){
+        $contenu2  = "<div class=card1>";
+        $contenu2 .="<form method='post'><div class=container1>";
+        $contenu2 .="        <h3 class=card-title>".$value->getJour()."</h3><hr>";
+        $contenu2 .="        <p class=card-text style=background-color: green>Frais : ".$value->getFrais()."</p>";
+        $contenu2 .="        <p class=card-text>Shedule : ".$value->getShedule()."</p>";
+        $contenu2 .="        <p class=card-text>Place(s) restante(s) : ".$value->getCmpPatient()."</p>";
+        $contenu2 .="        <input type='hidden' name='idEmployer' value=".$value->getNoEmployer().">";
+        $contenu2 .="        <input type='hidden' name='id' value=".$value->getIdShedule().">";
+        $contenu2 .="        <input type='hidden' name='defaultCmp' value=".$value->getCmpPatient().">";
+        $contenu2 .="        <input type='submit' name='reserver' value='Réserver'><br>";
+        $contenu2 .="    </div></div></form>";
+        echo $contenu2;
+    }
+}
 
-$sangManager = new groupeSanguinManager(connexion("bdd_hms"));
-$resultSang = $sangManager->getAllSang();
-?>
+if(isset($_POST["reserver"])){
+    $array = array("idShedule" => $_POST['id'],"idPatient" => $_SESSION["id"],"idEmployer" => $_POST["idEmployer"] );
+    $rendezvous = new rendezvous($array);
+    $rendezvousManager = new rendezvousManager(connexion("bdd_hms"));
+    $rendezvousManager->insertion($rendezvous);
 
-<center>
-<div>
-    <form method="post">
-        <h1 style=color:black>Gestion compte patient</h1>
-        <table>
-            <tr>
-                <td>Prenom  </td>
-                <td><input type="text" name="prenom" maxlength='30' required></td>
-            </tr>
-            <tr>
-                <td>Nom  </td>
-                <td><input type="text" name="nom" maxlength='30' required></td>
-            </tr>
-            <tr>
-                <td>Telephone  </td>
-                <td><input type="text" name="telephone" pattern="[0-9]{10}" placeholder="5140000000" required></td>
-            </tr>
-            <tr>
-                <td>Adresse  </td>
-                <td><input type="text" name="adresse" maxlength='100' required></td>
-            </tr>
-            <tr>
-                <td>Ville  </td>
-                <td><input type="text" name="ville" maxlength='50' required></td>
-            </tr>
-            <tr>
-                <td>Code Postal  </td>
-                <td><input type="text" name="codePostal" pattern="[A-Z]{1}[0-9]{1}[A-Z]{1}[0-9]{1}[A-Z]{1}[0-9]{1}" placeholder="X1X1X1" required></td>
-            </tr>
-            <tr>
-                <td>Sexe  </td>
-                <td>
-                <?php
-                $contenu ="<select name=sexe style=width:100%;>";
-                foreach($resultSexe as $key => $value){
-                    $contenu .="<option value=".$value->getIdSexe().">".$value->getGenre()."</option>";
-                }
-                $contenu .="</select>";
-                echo $contenu;
-                ?>
-            </tr>
-            <tr>
-                <td>Groupe Sanguin  </td>
-                <td>
-                <?php
-                $contenu1 ="<select name=grpSang style=width:100%;>";
-                foreach($resultSang as $key => $value){
-                    $contenu1 .="<option value=".$value->getIdGrpSang().">".$value->getGroupeSanguin()."</option>";
-                }
-                $contenu1 .="</select>";
-                echo $contenu1;
-                ?>
-                </td>
-            </tr>
-            <tr>
-                <td>Assurance Maladie  </td>
-                <td><input type="text" name="assuranceMaladie" pattern="[A-Z]{4}[0-9]{8}" placeholder="AAAA12345678" maxlength='20' required></td>
-            </tr>
-            <tr>
-                <td>Pays de naissance  </td>
-                <td><input type="text" name="paysNaissance" maxlength='50' required></td>
-            </tr>
-            <tr>
-                <td>Date de naissance  </td>
-                <td><input type="date" name="dateNaissance" style="width:97%;" required></td>
-            </tr>
-            <tr>
-                <td>Pseudo  </td>
-                <td><input type="text" name="pseudo" minlength="6" maxlength='30' required></td>
-            </tr>
-            <tr>
-                <td>Mot de passe  </td>
-                <td><input type="password" name="motDePasse" minlength="6" maxlength='30' required></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td><input type="submit" name="inscrire" value="Inscrire"></td>
-            </tr>
-        <table>
-    </form>
+    $defaultCmp = $_POST["defaultCmp"] - 1;
+    $arrayDefaultShedule = array("idShedule" => $_POST['id'],"cmpPatient" => $defaultCmp);
+    $sheduleDefault = new shedule($arrayDefaultShedule);
+    $sheduleManager = new sheduleManager(connexion("bdd_hms"));
+    $sheduleManager->updateCmp($sheduleDefault);
 
-    <?php
-        if(isset($_POST['inscrire'])){
-            if($_POST["dateNaissance"] > date("Y-m-d")){
-                echo '<script>alert("Entrer une date de naissance valide!")</script>';
-            }
-            else{
-                $array = array("prenom" => trim($_POST['prenom']),
-                "nom" => trim($_POST['nom']),
-                "telephone" => trim($_POST['telephone']),
-                "adresse" => trim($_POST['adresse']),
-                "ville" => trim($_POST['ville']),
-                "codePostal" => trim($_POST['codePostal']),
-                "idSexe" => $_POST['sexe'],
-                "idGrpSang" => $_POST['grpSang'],
-                "assuranceMaladie" => trim($_POST['assuranceMaladie']),
-                "paysNaissance" => trim($_POST['paysNaissance']),
-                "dateNaissance" => $_POST['dateNaissance'],
-                "pseudo" => trim($_POST['pseudo']),
-                "motDePasse" => trim($_POST['motDePasse']));
+    
+    if($defaultCmp == 0){
+        $arrayDefaultShedule = array("idShedule" => $_POST['id'],"disponibilite" => 0);
+        $sheduleDefault = new shedule($arrayDefaultShedule);
+        $sheduleManager->updateDisponibilite($sheduleDefault);
+    }
+    echo "<center><p style=color:green;>Rendez Vous confirmé!</p></center>";
+}
 
-                $patient = new patient($array);
-                $patientManager = new patientManager(connexion("bdd_hms"));
-                try{
-                $patientManager->insertion($patient);
-                echo "<center><p style=color:green;>Bonjour ".$_POST["prenom"].", vous êtes inscrit!</p></center>";
-                }
-                catch(Exception $e){
-                    echo '<script>alert("Insertion échoué! Pseudo ou Assurance maladie est déjà utilisé!")</script>';
-                }
-            }
-        }
-    ?>
-</div>
-</center>
-<br><br><br>
+if($mode == 0){
+    foreach($result as $key => $value){
+        $posteManager = new posteManager(connexion("bdd_hms"));
+        $resultPoste = $posteManager->getPoste($value->getIdPoste());
 
+        $hopitalManager = new hopitalManager(connexion("bdd_hms"));
+        $resultHopital = $hopitalManager->getHopital($value->getIdHopital());
+
+        $departementManager = new departementManager(connexion("bdd_hms"));
+        $resultDepartement = $departementManager->getDepartement($value->getIdDepartement());
+
+        $contenu2  ="<div class=card>";
+        $contenu2 .="<form method='post'><div class=container>";
+        $contenu2 .="<img src=".$value->getPhoto()." alt=Avatar style=width:100%>";
+        $contenu2 .="<h3 class=card-title>".$value->getPrenom()." ".$value->getNom()."</h3><hr>";
+        $contenu2 .="<p>".$value->getCourriel()."</p>";
+        $contenu2 .="<p>".$resultPoste->getPoste()."</p>";
+        $contenu2 .="<p>Hopital ".$resultHopital->getNom()."</p>";
+        $contenu2 .="<p>Département : ".$resultDepartement->getDepartement()."</p>";
+        $contenu2 .="<p>Employer No : ".$value->getIdEmployer()."</p>";
+        $contenu2 .="<input type='hidden' name='idEmployer' value=".$value->getIdEmployer().">";
+        $contenu2 .="<center><input type='submit' style=width:100px name='shedule' value='Shedule'></center>";
+        $contenu2 .="</div></div></form>";
+        echo $contenu2;
+    }
+}

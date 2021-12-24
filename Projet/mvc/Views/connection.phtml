@@ -6,6 +6,7 @@ if (isset($_POST["connection"])){
             $patient = new patient($array);
             $patientManager = new patientManager(connexion("bdd_hms"));
             $results = $patientManager->getPatientLog($patient);
+            $_SESSION['id'] = $results->getIdPatient();
         }
         if($_POST["poste"] == "employer"){
             $array = array("pseudo" => $_POST['pseudo'],"motDePasse" => $_POST['motDePasse']);
@@ -21,6 +22,7 @@ if (isset($_POST["connection"])){
             $_SESSION['motDePasse'] = $_POST['motDePasse'];
 
             if($_POST["poste"] == "patient"){
+                $_SESSION['idPoste'] = 0;
                 header("Location:patient");
             }
             elseif($_POST["poste"] == "employer"){

@@ -44,6 +44,7 @@ if(isset($_POST['transferer'])){
                 $contenu2 .="        <input type='hidden' name='idShedule' value=".$value2->getIdShedule()." >";
                 $contenu2 .="        <input type='hidden' name='Cmp' value=".$value2->getCmpPatient().">";
                 $contenu2 .="        <input type='hidden' name='idEmp' value=".$value1->getIdEmployer().">";
+                $contenu2 .="        <input type='hidden' name='idHopital' value=".$value1->getIdHopital().">";
                 $contenu2 .="        <input type='hidden' name='idPatient' value=".$_POST["idPatient"].">";
                 $contenu2 .="        <input type='submit' style=width:100px name='trans' value='Transférer'><br>";
                 $contenu2 .="    </div></div></form>";
@@ -71,6 +72,17 @@ if(isset($_POST['trans'])){
     }
 
     echo "<center><p style=color:green;>Patient Transféré!</p></center>";
+}
+if(isset($_POST['facturer'])){
+    $tps = ($_POST['frais']/100) * 5;
+    $tvq = ($_POST['frais']/100) * 10;
+    $total = $_POST['frais'] + $tps + $tvq;
+    $array = array( "date" => date("Y-m-d"),"avantTaxe" => $_POST['frais'],"tps" => $tps,"tvq" => $tvq,"prixTotal" => $total,"idPatient"=>$_POST["idPatient"],"idHopital" => $_SESSION["idHopital"],"idEmployer" => $_SESSION["id"]);
+    $facture = new facture($array);
+    $factureManager = new factureManager(connexion("bdd_hms"));
+    $resultFacture = $factureManager->Insert($facture);
+
+    echo "<center><p style=color:green;>Patient Facturé!</p></center>";
 }
 if(isset($_POST['trouver'])){
     $array = array("assuranceMaladie" => $_POST['assuranceMaladieTrouver'],"idHopital" => $_SESSION['idHopital']);
@@ -201,11 +213,13 @@ function affiche($resultRendezvous){
         $contenu2 .="        <p class=card-text>Avec : ".$resultEmployer->getPrenom()." ".$resultEmployer->getNom()."</p>";
         $contenu2 .="        <p class=card-text>Date : ".$resultShedule->getJour()."</p>";
         $contenu2 .="        <p class=card-text>Shedule : ".$resultShedule->getShedule()."</p>";
+        $contenu2 .="        <input type='hidden' name='frais' value=".$resultShedule->getFrais().">";
         $contenu2 .="        <input type='hidden' name='id' value=".$value->getIdRendezvous().">";
         $contenu2 .="        <input type='hidden' name='idPatient' value=".$resultPatient->getIdPatient().">";
-        $contenu2 .="        <input type='submit' style=width:100px name='supprimer' value='Supprimer'><input type='submit' style=width:100px name='modifier' value='Modifier'><input type='submit' style=width:100px name='transferer' value='Transférer'><br>";
+        $contenu2 .="        <input type='submit' style=width:75px name='facturer' value='Facturer'><input type='submit' style=width:75px name='supprimer' value='Supprimer'><input type='submit' style=width:75px name='modifier' value='Modifier'><input type='submit' style=width:75px name='transferer' value='Transférer'><br>";
         $contenu2 .="    </div></div></form>";
         echo $contenu2;
     }
 }
+
 ?>

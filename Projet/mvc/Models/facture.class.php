@@ -1,13 +1,21 @@
 <?php
     class facture 
     {
-        private $_idFacture,$_date,$_tps,$_tvq,$_prixTotal,$_avantTaxe;
+        private $_idFacture,$_date,$_tps,$_tvq,$_prixTotal,$_avantTaxe,$_idPatient,$_idEmployer,$_idHopital;
 
         public function __construct(array $donnee = array()){
             if(!empty($donnee)){
                 $this->hydrate($donnee);
             }
         }
+        public function getIdHopital(){            return $this->_idHopital;}
+        public function setIdHopital($idHopital){              $this->_idHopital = $idHopital;} 
+
+        public function getIdEmployer(){  return $this->_idEmployer;}
+        public function setIdEmployer ($idEmployer){$this->_idEmployer = $idEmployer;} 
+
+        public function getIdPatient(){            return $this->_idPatient;}
+        public function setIdPatient($idPatient){              $this->_idPatient = $idPatient;} 
 
         public function getAvantTaxe(){            return $this->_avantTaxe;}
         public function setAvantTaxe($avantTaxe){              $this->_avantTaxe = $avantTaxe;} 

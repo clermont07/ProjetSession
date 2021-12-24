@@ -1,0 +1,61 @@
+<?php
+include_once("./fonction.php");
+$prescriptionManager = new prescriptionManager(connexion("bdd_hms"));
+$resultprescription = $prescriptionManager->getPrescription($_SESSION["id"]);
+
+$patientManager = new patientManager(connexion("bdd_hms"));
+$resultPatient = $patientManager->getPatient($_SESSION["id"]);
+
+foreach($resultprescription as $key => $value){
+    $employerManager = new employerManager(connexion("bdd_hms"));
+    $resultEmployer = $employerManager->getEmployer($value->getIdEmployer());
+    
+    $hopitalManager = new hopitalManager(connexion("bdd_hms"));
+    $resultHopital = $hopitalManager->getHopital($value->getIdHopital());
+?>
+<br><center>
+    <table style="border: 5px solid lightskyblue;width: 600px;">
+        <tr>
+            <td colspan="2"><center><h1><b><?php echo '<p style="color:blue">'.$resultHopital->getNom().' </p> '?></b></h1><center></td>
+        </tr>
+        <tr>
+            <td style="width: 50%;"><h3><b>Medecin</b> <?php echo $resultEmployer->getNom()." ".$resultEmployer->getPrenom()  ;?></h3></td>
+            <td>  &emsp; &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<?php echo $value->getDate();?> <td>
+        </tr>
+        <tr>
+            <td style="width: 50%;"><b><?php echo $resultHopital->getNom();?></b></td>
+        </tr>
+        <tr>
+            <td style="width: 50%;"><b><?php echo $resultHopital->getAdresse();?></b></td>
+        </tr>
+        <tr>
+            <td style="width: 50%;"><b><?php echo $resultHopital->getVille();?></b></td>
+        </tr>
+        <tr>
+            <td style="width: 50%;"><b><?php echo $resultHopital->getCodePostal();?></b></td>
+        </tr>
+        <tr>
+            <td style="width: 50%;"><b><?php echo $resultHopital->getTelephone();?></b></td>
+        </tr>
+        <tr>
+            <td  colspan="2"><hr style="height:2px;color:blue;background-color:blue"><br></td>
+        </tr>
+        <tr>
+            <td>Nom patient :<?php  echo $resultPatient->getNom(); ?></td>
+            <td>&emsp;&emsp;&emsp;Numéro téléphone :<?php  echo $resultPatient->getTelephone(); ?></td>
+        </tr>
+        <tr>
+            <td  colspan="2"><h3 style="color:blue">Prescription</h3></td>
+        </tr>
+        <tr>
+            <td  colspan="2"><?php  echo $value->getDescription(); ?></td>
+        </tr>
+        <tr>
+            <td><br><b>Signé :</b> <?php echo $resultEmployer->getPrenom();?></td>
+        </tr>
+        </table>
+</center>
+<br>
+<?php
+}
+?>
