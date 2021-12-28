@@ -1,13 +1,16 @@
 <?php
     class rendezvous 
     {
-        private $_idRendezvous,$_idPatient,$_idShedule,$_idEmployer;
+        private $_idRendezvous,$_idPatient,$_idShedule,$_idEmployer,$_idHopital;
 
         public function __construct(array $donnee = array()){
             if(!empty($donnee)){
                 $this->hydrate($donnee);
             }
         }
+        public function getIdHopital(){            return $this->_idHopital;}
+        public function setIdHopital($idHopital){              $this->_idHopital = $idHopital;} 
+
         public function getIdEmployer(){  return $this->_idEmployer;}
         public function setIdEmployer ($idEmployer){$this->_idEmployer = $idEmployer;} 
 

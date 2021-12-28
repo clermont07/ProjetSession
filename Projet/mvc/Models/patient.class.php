@@ -1,7 +1,7 @@
 <?php
     class patient 
     {
-        private $_idPatient,$_nom,$_prenom,$_telephone,$_dateNaissance,$_idSexe,$_idGrpSang,$_paysNaissance,$_idPrescription,$_adresse,$_codePostal,$_ville,$_idFacture,$_idHopital,$_idEmployer,$_description,$_motDePasse,$_pseudo,$_assuranceMaladie;
+        private $_idPatient,$_nom,$_prenom,$_telephone,$_dateNaissance,$_idSexe,$_idGrpSang,$_paysNaissance,$_idPrescription,$_adresse,$_codePostal,$_ville,$_idFacture,$_description,$_motDePasse,$_pseudo,$_assuranceMaladie;
 
         public function __construct(array $donnee = array()){
             if(!empty($donnee)){
@@ -20,9 +20,6 @@
 
         public function getDescription(){  return $this->_description;}
         public function setDescription ($description){$this->_description = $description;} 
-
-        public function getIdEmployer(){  return $this->_idEmployer;}
-        public function setIdEmployer ($idEmployer){$this->_idEmployer = $idEmployer;} 
 
         public function getIdFacture(){  return $this->_idFacture;}
         public function setIdFacture ($idFacture){$this->_idFacture = $idFacture;} 
@@ -53,9 +50,6 @@
 
         public function getTelephone(){            return $this->_telephone;}
         public function setTelephone($telephone){              $this->_telephone = $telephone;} 
-
-        public function getIdHopital(){            return $this->_idHopital;}
-        public function setIdHopital($idHopital){              $this->_idHopital = $idHopital;} 
 
         public function getPrenom(){            return $this->_prenom;}
         public function setPrenom($prenom){              $this->_prenom = $prenom;} 

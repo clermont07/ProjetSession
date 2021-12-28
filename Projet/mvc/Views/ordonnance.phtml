@@ -51,31 +51,40 @@ Recherche patient <input type="text" name="assuranceMaladieTrouver" style="width
 </tr>
 <?php
 if(isset($_POST['trouver'])){
-    $array = array("assuranceMaladie" => $_POST['assuranceMaladieTrouver'],"idHopital" => $_SESSION['idHopital']);
+    $array = array("assuranceMaladie" => $_POST['assuranceMaladieTrouver']);
     $patient = new patient($array);
     $patientManager = new patientManager(connexion("bdd_hms"));
     $resultPatient = $patientManager->getGestionPatient($patient);
+
     if($resultPatient != null){
-        $_SESSION['idPatient'] = $resultPatient->getIdPatient();?>
+        $rendezvousManager = new rendezvousManager(connexion("bdd_hms"));
+        $resultRendezvous = $rendezvousManager->getValidationRendezvous($resultPatient->getIdPatient(),$_SESSION["idHopital"]);
+            
+        if($resultRendezvous != null){
+            $_SESSION['idPatient'] = $resultPatient->getIdPatient();?>
             <tr>
                 <td>Nom patient :<?php  echo $resultPatient->getNom(); ?></td>
                 <td>&emsp;&emsp;&emsp;Numéro téléphone :<?php  echo $resultPatient->getTelephone(); ?></td>
             </tr>
             <tr>
-            <td  colspan="2"><h3 style="color:blue">Prescription</h3><br></td>
+                <td  colspan="2"><h3 style="color:blue">Prescription</h3><br></td>
             </tr>
             <tr>
-            <td  colspan="2"><textarea name="description"  maxlength='500' style="width:100%;" required></textarea></td>
+                <td  colspan="2"><textarea name="description"  maxlength='500' style="width:100%;" required></textarea></td>
             </tr>
             <tr>
-            <td><b>Signé :</b> <?php echo $result->getPrenom();?></td>
+                <td><b>Signé :</b> <?php echo $result->getPrenom();?></td>
             </tr>
             <tr>
-            <td  colspan="2"><center><input type="submit" name="prescrire" value="Prescrire" id="btnPrescrire"></center></td>
+                <td  colspan="2"><center><input type="submit" name="prescrire" value="Prescrire" id="btnPrescrire"></center></td>
             </tr>
-        </table>
-        </form>
-        <?php
+            </table>
+            </form>
+            <?php
+        }
+        else{
+            echo '<script>alert("Se patient a aucun rendez-vous à cette hopital!")</script>';
+        }
     }
 }
 ?>

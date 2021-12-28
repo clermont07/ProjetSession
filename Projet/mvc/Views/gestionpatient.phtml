@@ -113,8 +113,6 @@ $resultSang = $sangManager->getAllSang();
             }
             else{
                 $array = array("prenom" => trim($_POST['prenom']),
-                "idEmployer" => $_SESSION["id"],
-                "idHopital" => $_SESSION["idHopital"],
                 "description" => trim($_POST['description']),
                 "nom" => trim($_POST['nom']),
                 "telephone" => trim($_POST['telephone']),
@@ -141,28 +139,38 @@ $resultSang = $sangManager->getAllSang();
             }
         }
         if(isset($_POST['trouver'])){
-            $array = array("assuranceMaladie" => $_POST['assuranceMaladieTrouver'],"idHopital" => $_SESSION['idHopital']);
+            $array = array("assuranceMaladie" => $_POST['assuranceMaladieTrouver']);
             $patient = new patient($array);
             $patientManager = new patientManager(connexion("bdd_hms"));
             $result = $patientManager->getGestionPatient($patient);
+
             if($result != null){
-                $_SESSION['idPatient'] = $result->getIdPatient();
-                ?>
-                <script>document.getElementById("prenom").value = '<?php  echo $result->getPrenom(); ?>'</script>
-                <script>document.getElementById("nom").value = '<?php  echo $result->getNom(); ?>'</script>
-                <script>document.getElementById("telephone").value = '<?php  echo $result->getTelephone(); ?>'</script>
-                <script>document.getElementById("adresse").value = '<?php  echo $result->getAdresse(); ?>'</script>
-                <script>document.getElementById("ville").value = '<?php  echo $result->getVille(); ?>'</script>
-                <script>document.getElementById("codePostal").value = '<?php  echo $result->getCodePostal(); ?>'</script>
-                <script>document.getElementById("sexe").value = '<?php  echo $result->getIdSexe(); ?>'</script>
-                <script>document.getElementById("grpSang").value = '<?php  echo $result->getIdGrpSang(); ?>'</script>
-                <script>document.getElementById("assuranceMaladie").value = '<?php  echo $result->getAssuranceMaladie(); ?>'</script>
-                <script>document.getElementById("description").value = '<?php  echo $result->getDescription(); ?>'</script>
-                <script>document.getElementById("paysNaissance").value = '<?php  echo $result->getPaysNaissance(); ?>'</script>
-                <script>document.getElementById("dateNaissance").value = '<?php  echo $result->getDateNaissance(); ?>'</script>
-                <script>document.getElementById("pseudo").value = '<?php  echo $result->getPseudo(); ?>'</script>
-                <script>document.getElementById("motDePasse").value = '<?php  echo $result->getMotDePasse(); ?>'</script>
-                <?php
+                $rendezvousManager = new rendezvousManager(connexion("bdd_hms"));
+                $resultRendezvous = $rendezvousManager->getValidationRendezvous($result->getIdPatient(),$_SESSION["idHopital"]);
+                    
+                if($resultRendezvous != null){
+
+                    $_SESSION['idPatient'] = $result->getIdPatient();
+                    ?>
+                    <script>document.getElementById("prenom").value = '<?php  echo $result->getPrenom(); ?>'</script>
+                    <script>document.getElementById("nom").value = '<?php  echo $result->getNom(); ?>'</script>
+                    <script>document.getElementById("telephone").value = '<?php  echo $result->getTelephone(); ?>'</script>
+                    <script>document.getElementById("adresse").value = '<?php  echo $result->getAdresse(); ?>'</script>
+                    <script>document.getElementById("ville").value = '<?php  echo $result->getVille(); ?>'</script>
+                    <script>document.getElementById("codePostal").value = '<?php  echo $result->getCodePostal(); ?>'</script>
+                    <script>document.getElementById("sexe").value = '<?php  echo $result->getIdSexe(); ?>'</script>
+                    <script>document.getElementById("grpSang").value = '<?php  echo $result->getIdGrpSang(); ?>'</script>
+                    <script>document.getElementById("assuranceMaladie").value = '<?php  echo $result->getAssuranceMaladie(); ?>'</script>
+                    <script>document.getElementById("description").value = '<?php  echo $result->getDescription(); ?>'</script>
+                    <script>document.getElementById("paysNaissance").value = '<?php  echo $result->getPaysNaissance(); ?>'</script>
+                    <script>document.getElementById("dateNaissance").value = '<?php  echo $result->getDateNaissance(); ?>'</script>
+                    <script>document.getElementById("pseudo").value = '<?php  echo $result->getPseudo(); ?>'</script>
+                    <script>document.getElementById("motDePasse").value = '<?php  echo $result->getMotDePasse(); ?>'</script>
+                    <?php
+                }
+                else{
+                    echo '<script>alert("Se patient a aucun rendez-vous à cette hopital!")</script>';
+                }
             }
         }
         if(isset($_POST['modifier'])){
@@ -172,8 +180,6 @@ $resultSang = $sangManager->getAllSang();
             else{
                 $array = array("prenom" => trim($_POST['prenom']),
                 "idPatient" => $_SESSION["idPatient"],
-                "idEmployer" => $_SESSION["id"],
-                "idHopital" => $_SESSION["idHopital"],
                 "description" => trim($_POST['description']),
                 "nom" => trim($_POST['nom']),
                 "telephone" => trim($_POST['telephone']),

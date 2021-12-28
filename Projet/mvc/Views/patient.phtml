@@ -20,6 +20,10 @@ if(isset($_POST["shedule"])){
     $mode = 1;
     $sheduleManager = new sheduleManager(connexion("bdd_hms"));
     $resultShedule = $sheduleManager->getSheduleDispo($_POST["idEmployer"]);
+
+    $rendezvousManager = new rendezvousManager(connexion("bdd_hms"));
+    $resultRendezvous = $rendezvousManager->getPatientRendezvous($_SESSION["id"]);
+
     foreach($resultShedule as $key => $value){
         $contenu2  = "<div class=card1>";
         $contenu2 .="<form method='post'><div class=container1>";
@@ -30,14 +34,22 @@ if(isset($_POST["shedule"])){
         $contenu2 .="        <input type='hidden' name='idEmployer' value=".$value->getNoEmployer().">";
         $contenu2 .="        <input type='hidden' name='id' value=".$value->getIdShedule().">";
         $contenu2 .="        <input type='hidden' name='defaultCmp' value=".$value->getCmpPatient().">";
-        $contenu2 .="        <input type='submit' name='reserver' value='Réserver'><br>";
+        $contenu2 .="<input type='hidden' name='idHopital' value=".$_POST["idHopital"].">";
+        $contenu2 .="        <input type='submit' name='reserver' id='reserver' value='Réserver'><br>";
         $contenu2 .="    </div></div></form>";
         echo $contenu2;
+
+        foreach($resultRendezvous as $key => $value1){
+            if($value1->getIdShedule() == $value->getIdShedule()){
+                ;?><script>document.getElementById("reserver").disabled = true; </script><?php
+            }
+        }
+
     }
 }
 
 if(isset($_POST["reserver"])){
-    $array = array("idShedule" => $_POST['id'],"idPatient" => $_SESSION["id"],"idEmployer" => $_POST["idEmployer"] );
+    $array = array("idShedule" => $_POST['id'],"idPatient" => $_SESSION["id"],"idEmployer" => $_POST["idEmployer"],"idHopital"=> $_POST["idHopital"]);
     $rendezvous = new rendezvous($array);
     $rendezvousManager = new rendezvousManager(connexion("bdd_hms"));
     $rendezvousManager->insertion($rendezvous);
@@ -78,7 +90,18 @@ if($mode == 0){
         $contenu2 .="<p>Département : ".$resultDepartement->getDepartement()."</p>";
         $contenu2 .="<p>Employer No : ".$value->getIdEmployer()."</p>";
         $contenu2 .="<input type='hidden' name='idEmployer' value=".$value->getIdEmployer().">";
-        $contenu2 .="<center><input type='submit' style=width:100px name='shedule' value='Shedule'></center>";
+        $contenu2 .="<input type='hidden' name='idHopital' value=".$value->getIdHopital().">";
+
+        $sheduleManager = new sheduleManager(connexion("bdd_hms"));
+        $resultShedule = $sheduleManager->getSheduleDispo($value->getIdEmployer());
+
+        if($resultShedule != null){
+            $contenu2 .="<p>Disponible : <b style=color:green;> Oui </b></p>";
+            $contenu2 .="<center><input type='submit' style=width:100px name='shedule' value='Shedule'></center>";
+        }else{
+            $contenu2 .="<p>Disponible : <b style=color:red;> Non </b></p>";
+            $contenu2 .="<center><input type='submit' disabled style=width:100px name='shedule' value='Shedule'></center>";
+        }
         $contenu2 .="</div></div></form>";
         echo $contenu2;
     }

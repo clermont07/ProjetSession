@@ -37,6 +37,15 @@ class rendezvousManager{
         }     
         return $rendezvous;  
     }
+    public function getValidationRendezvous($id,$hopital){
+        $query = $this->_db->query("SELECT * FROM rendezvous WHERE idPatient = ".$id." AND idHopital = ".$hopital."");
+        $rendezvous = array();
+        
+        while($data=$query->fetch(PDO::FETCH_ASSOC)){
+            $rendezvous[] = new rendezvous($data);
+        }     
+        return $rendezvous;  
+    }
 
     public function getPatientRendezvous($id){
         $query = $this->_db->query("SELECT * FROM rendezvous WHERE idPatient = ".$id."");
@@ -63,8 +72,9 @@ class rendezvousManager{
     }
     public function insertion(rendezvous $rendezvous) 
     {
-        $query = $this->_db->prepare("INSERT into rendezvous(idEmployer,idPatient,idShedule) VALUES (:idEmployer,:idPatient,:idShedule)"); 
+        $query = $this->_db->prepare("INSERT into rendezvous(idEmployer,idHopital,idPatient,idShedule) VALUES (:idEmployer,:idHopital,:idPatient,:idShedule)"); 
         $query->bindValue(":idEmployer",$rendezvous->getIdEmployer());
+        $query->bindValue(":idHopital",$rendezvous->getIdHopital());
         $query->bindValue(":idPatient",$rendezvous->getIdPatient());
         $query->bindValue(":idShedule",$rendezvous->getIdShedule());
         $query->execute();

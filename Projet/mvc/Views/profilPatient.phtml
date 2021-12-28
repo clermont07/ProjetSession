@@ -1,3 +1,201 @@
+
+<style>
+.center1 {  margin: auto;  width: 60%;  border: 3px solid lightskyblue;  padding: 10px;}
+.card1 {  float: left; background: rgba(0, 128, 0, 0.3);box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);  transition: 0.3s;  width: 300px;  border-radius: 5px;  padding: 10px;margin: 10px;}
+.card1:hover {  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);}
+.container1 {  width:100%;}
+</style>
 <?php
 include_once("./fonction.php");
+
+$patientManager = new patientManager(connexion("bdd_hms"));
+$resultPatient = $patientManager->getPatient($_SESSION["id"]);
+
+$sexeManager = new sexeManager(connexion("bdd_hms"));
+$resultSexe = $sexeManager->getAllSexe();
+
+$sangManager = new groupeSanguinManager(connexion("bdd_hms"));
+$resultSang = $sangManager->getAllSang();
+
+if(isset($_POST['annuler'])){
+    $array = array("idRendezvous" => $_POST['idRendezvous']);
+    $rendezvous = new rendezvous($array);
+    $rendezvousManager = new rendezvousManager(connexion("bdd_hms"));
+
+    $sheduleManager = new sheduleManager(connexion("bdd_hms"));
+    $resultShedule = $sheduleManager->getIdShedule($_POST['idShedule']);
+
+    $arrayShedule = array("idShedule" => $_POST['idShedule'],"cmpPatient" => $resultShedule->getCmpPatient() +1);
+    $shedule = new shedule($arrayShedule);
+    $sheduleManager->updateCmp($shedule);
+
+    if($resultShedule->getCmpPatient() == 0){
+        $arrayDefaultShedule =array("idShedule" => $_POST['idShedule'],"disponibilite" => 1);
+        $sheduleDefault = new shedule($arrayDefaultShedule);
+        $sheduleManager->updateDisponibilite($sheduleDefault);
+    }
+
+    try{
+        $rendezvousManager->supprimer($rendezvous);
+        header("Location:profilPatient");
+        }
+        catch(Exception $e){
+            echo '<script>alert("Suppression échoué!")</script>';
+        }
+}
+
+if(isset($_POST['mofifier'])){
+    if($_POST["dateNaissance"] > date("Y-m-d")){
+        echo '<script>alert("Entrer une date de naissance valide!")</script>';
+    }
+    else{
+        $array = array("idPatient" => $_SESSION["id"],
+        "prenom" => trim($_POST['prenom']),
+        "nom" => trim($_POST['nom']),
+        "telephone" => trim($_POST['telephone']),
+        "adresse" => trim($_POST['adresse']),
+        "ville" => trim($_POST['ville']),
+        "codePostal" => trim($_POST['codePostal']),
+        "idSexe" => $_POST['sexe'],
+        "idGrpSang" => $_POST['grpSang'],
+        "assuranceMaladie" => trim($_POST['assuranceMaladie']),
+        "paysNaissance" => trim($_POST['paysNaissance']),
+        "dateNaissance" => $_POST['dateNaissance'],
+        "pseudo" => trim($_POST['pseudo']),
+        "motDePasse" => trim($_POST['motDePasse']));
+
+        $patient = new patient($array);
+        $patientManager = new patientManager(connexion("bdd_hms"));
+        try{
+        $patientManager->Modifier($patient);
+        header("Location:profilPatient");
+        }
+        catch(Exception $e){
+            echo '<script>alert("Modification échoué! Pseudo ou Assurance maladie est déjà utilisé!")</script>';
+        }
+    }
+  }
+?>
+
+<center>
+<div>
+    <form method="post">
+        <h1 style=color:black>Gestion compte</h1>
+        <table>
+            <tr>
+                <td>Prénom  </td>
+                <td><input type="text" name="prenom" maxlength='30' value="<?php echo $resultPatient->getPrenom();?>" required></td>
+            </tr>
+            <tr>
+                <td>Nom  </td>
+                <td><input type="text" name="nom" maxlength='30' value="<?php echo $resultPatient->getNom();?>" required></td>
+            </tr>
+            <tr>
+                <td>Téléphone  </td>
+                <td><input type="text" name="telephone" pattern="[0-9]{10}" placeholder="5140000000" value="<?php echo $resultPatient->getTelephone();?>" required></td>
+            </tr>
+            <tr>
+                <td>Adresse  </td>
+                <td><input type="text" name="adresse" maxlength='100' value="<?php echo $resultPatient->getAdresse();?>" required></td>
+            </tr>
+            <tr>
+                <td>Ville  </td>
+                <td><input type="text" name="ville" maxlength='50' value="<?php echo $resultPatient->getVille();?>" required></td>
+            </tr>
+            <tr>
+                <td>Code Postal  </td>
+                <td><input type="text" name="codePostal" pattern="[A-Z]{1}[0-9]{1}[A-Z]{1}[0-9]{1}[A-Z]{1}[0-9]{1}" placeholder="X1X1X1" value="<?php echo $resultPatient->getCodePostal();?>" required></td>
+            </tr>
+            <tr>
+                <td>Sexe  </td>
+                <td>
+                <?php
+                $contenu ="<select name=sexe style=width:100%;>";
+                foreach($resultSexe as $key => $value){
+                    if($value->getIdSexe() == $resultPatient->getIdSexe()){
+                        $contenu .="<option selected value=".$value->getIdSexe().">".$value->getGenre()."</option>";
+                    }
+                    else{
+                        $contenu .="<option value=".$value->getIdSexe().">".$value->getGenre()."</option>";
+                    }
+                }
+                $contenu .="</select>";
+                echo $contenu;
+                ?>
+            </tr>
+            <tr>
+                <td>Groupe Sanguin  </td>
+                <td>
+                <?php
+                $contenu1 ="<select name=grpSang style=width:100%;>";
+                foreach($resultSang as $key => $value){
+                    if($value->getIdGrpSang() == $resultPatient->getIdGrpSang()){
+                        $contenu1 .="<option selected value=".$value->getIdGrpSang().">".$value->getGroupeSanguin()."</option>";
+                    }
+                    else{
+                        $contenu1 .="<option value=".$value->getIdGrpSang().">".$value->getGroupeSanguin()."</option>";
+                    }
+                    $contenu .="</select>";
+                }
+                    echo $contenu1;
+                ?>
+                </td>
+            </tr>
+            <tr>
+                <td>Assurance Maladie  </td>
+                <td><input type="text" name="assuranceMaladie" pattern="[A-Z]{4}[0-9]{8}" placeholder="AAAA12345678" maxlength='20' value="<?php echo $resultPatient->getAssuranceMaladie();?>" required></td>
+            </tr>
+            <tr>
+                <td>Pays de naissance  </td>
+                <td><input type="text" name="paysNaissance" maxlength='50' value="<?php echo $resultPatient->getPaysNaissance();?>" required></td>
+            </tr>
+            <tr>
+                <td>Date de naissance  </td>
+                <td><input type="date" name="dateNaissance" style="width:97%;" value="<?php echo $resultPatient->getDateNaissance();?>" required></td>
+            </tr>
+            <tr>
+                <td>Pseudo  </td>
+                <td><input type="text" name="pseudo" minlength="6" maxlength='30' value="<?php echo $resultPatient->getPseudo();?>" required></td>
+            </tr>
+            <tr>
+                <td>Mot de passe  </td>
+                <td><input type="password" name="motDePasse" minlength="6" maxlength='30' value="<?php echo $resultPatient->getMotDePasse();?>" required></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="submit" name="mofifier" value="Modifier"></td>
+            </tr>
+        <table>
+    </form>
+</div>
+</center>
+<br><br><br>
+<?php
+
+    $rendezvousManager = new rendezvousManager(connexion("bdd_hms"));
+    $resultRendezvous = $rendezvousManager->getPatientRendezvous($_SESSION["id"]);
+
+    foreach($resultRendezvous as $key => $value){
+        $sheduleManager = new sheduleManager(connexion("bdd_hms"));
+        $resultShedule = $sheduleManager->getIdShedule($value->getIdShedule());
+
+        $employerManager = new employerManager(connexion("bdd_hms"));
+        $resultEmployer = $employerManager->getEmployer($value->getIdEmployer());
+
+        $hopitalManager = new hopitalManager(connexion("bdd_hms"));
+        $resultHopital = $hopitalManager->getHopital($resultEmployer->getIdHopital());
+
+        $contenu2  = "<div class=card1>";
+        $contenu2 .="<form method='post'><div class=container1>";
+        $contenu2 .="        <h3 class=card-title>".$resultHopital->getNom()."</h3><hr>";
+        $contenu2 .="        <p class=card-text style=background-color: green>Adresse : ".$resultHopital->getAdresse()."</p>";
+        $contenu2 .="        <p class=card-text>Avec : ".$resultEmployer->getNom()." ".$resultEmployer->getPrenom()."</p>";
+        $contenu2 .="        <p class=card-text>Date : ".$resultShedule->getJour()." / ".$resultShedule->getShedule()."</p>";
+        $contenu2 .="        <p class=card-text>Frais : ".$resultShedule->getFrais()."</p>";
+        $contenu2 .="        <input type='hidden' name='idShedule' value=".$resultShedule->getIdShedule().">";
+        $contenu2 .="        <input type='hidden' name='idRendezvous' value=".$value->getIdRendezvous().">";
+        $contenu2 .="        <input type='submit' name='annuler' value='Annuler'><br>";
+        $contenu2 .="    </div></div></form>";
+        echo $contenu2;
+    }
 ?>

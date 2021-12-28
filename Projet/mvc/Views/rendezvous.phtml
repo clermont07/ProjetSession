@@ -60,7 +60,7 @@ if(isset($_POST['trans'])){
     $sheduleManager = new sheduleManager(connexion("bdd_hms"));
     $sheduleManager->updateCmp($sheduleDefault);
 
-    $array = array("idShedule" => $_POST['idShedule'], "idPatient"=>$_POST["idPatient"],"idEmployer"=>$_POST["idEmp"]);
+    $array = array("idShedule" => $_POST['idShedule'], "idPatient"=>$_POST["idPatient"],"idEmployer"=>$_POST["idEmp"],"idHopital"=>$_POST["idHopital"]);
     $rendezvous = new rendezvous($array);
     $rendezvousManager = new rendezvousManager(connexion("bdd_hms"));
     $rendezvousManager->insertion($rendezvous);
@@ -85,13 +85,19 @@ if(isset($_POST['facturer'])){
     echo "<center><p style=color:green;>Patient Facturé!</p></center>";
 }
 if(isset($_POST['trouver'])){
-    $array = array("assuranceMaladie" => $_POST['assuranceMaladieTrouver'],"idHopital" => $_SESSION['idHopital']);
+    $array = array("assuranceMaladie" => $_POST['assuranceMaladieTrouver']);
     $patient = new patient($array);
     $patientManager = new patientManager(connexion("bdd_hms"));
     $resultPatient = $patientManager->getGestionPatient($patient);
     if($resultPatient != null){
+        $resultRendezvous = $rendezvousManager->getValidationRendezvous($resultPatient->getIdPatient(),$_SESSION["idHopital"]);
+        if($resultRendezvous != null){
         $debut = 1;
         affiche($rendezvousManager->getPatientRendezvous($resultPatient->getIdPatient()));
+        }
+        else{
+            echo '<script>alert("Se patient a aucun rendez-vous à cette hopital!")</script>';
+        }
     }
 }
 if(isset($_POST['modifier'])){
