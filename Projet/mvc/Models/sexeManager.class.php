@@ -28,4 +28,13 @@ class sexeManager{
         }     
         return $sexe;  
     }
+    public function getSexe($id){
+        $req = $this->_db->query("SELECT * FROM sexe WHERE idSexe = ".$id."");
+        $data=$req->fetch(PDO::FETCH_ASSOC);
+        if($data !== Null){
+            $obj1 = new sexe($data);
+            return $obj1;
+        }
+        return false;
+    }
 }

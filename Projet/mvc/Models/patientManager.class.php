@@ -139,4 +139,18 @@ class patientManager{
             echo '<script>alert("Se patient ne fait pas parti du sytème hopital!")</script>';
         }
     }
+    public function getAllPatient(){
+        $query = $this->_db->query("SELECT * FROM patient ");
+        $patient = array();
+        
+        while($data=$query->fetch(PDO::FETCH_ASSOC)){
+            $patient[] = new patient($data);
+        }     
+        return $patient;
+    }
+    public function supprimer(patient $patient){
+        $query = $this->_db->prepare("DELETE FROM patient WHERE idPatient =(:idPatient)"); 
+        $query->bindValue(":idPatient",$patient->getIdPatient());
+        $query->execute();
+    }
 }

@@ -55,12 +55,9 @@ if(isset($_POST['ajouter'])){
     }
 }
 ?>
-
+<br>
 <div>
-
-    
     <?php
-    
     $contenu1 ="<form method='post'>&nbsp;&nbsp;&nbsp;&nbsp;Département : <select name=departement style=width:176px;>";
     foreach($resultAllDepartement as $key => $value){
         $contenu1 .="<option value=".$value->getIdDepartement().">".$value->getDepartement()."</option>";
