@@ -38,4 +38,16 @@ class hopitalManager{
         }
         return false;
     }
+
+    public function update(hopital $hopital) 
+    {
+        $query = $this->_db->prepare(" UPDATE hopital SET Nom = (:nom), Adresse = (:adresse), Ville = (:ville), CodePostal = (:codePostal), Telephone = (:telephone) WHERE idHopital=(:idHopital)");
+        $query->bindValue(":idHopital",$hopital->getIdHopital());
+        $query->bindValue(":nom",$hopital->getNom());
+        $query->bindValue(":adresse",$hopital->getAdresse());
+        $query->bindValue(":ville",$hopital->getVille());
+        $query->bindValue(":telephone",$hopital->getTelephone());
+        $query->bindValue(":codePostal",$hopital->getCodePostal());
+        $query->execute();
+    }
 }

@@ -30,8 +30,7 @@ elseif( $_SESSION['idPoste'] == 2 ){
 ?>
 <div class="topnav">
     <a class="active" style="float:right" href="dashboard/projet/mvc/deco">Déconnexion</a>
-    <a class="active" style="float:right" href="dashboard/projet/mvc/affichemedecin">Medecin</a>
-    <a class="active" style="float:right" href="dashboard/projet/mvc/afficheinfirmiere">Infirmiere</a>
+    <a class="active" style="float:right" href="dashboard/projet/mvc/afficheEmployer">Employer</a>
     <a class="active" style="float:right" href="dashboard/projet/mvc/affichepatient">Patient</a>
     <a class="active" style="float:right" href="dashboard/projet/mvc/hopital">Hopital</a>
     <a class="active" style="float:right" href="dashboard/projet/mvc/profil">Profil</a>

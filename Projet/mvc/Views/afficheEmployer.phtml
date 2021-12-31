@@ -1,0 +1,344 @@
+<style>
+.card { float:left;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);  transition: 0.3s;  width: 300px;  border-radius: 5px;  padding: 20px; margin:10 auto;}
+.card:hover {  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);}
+img {  border-radius: 5px 5px 0 0;  width: 300px;  height: 400px;}
+.container {  width:100%;}
+#right {  float:right;  border: 3px solid lightskyblue;}
+.button2:hover {
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+}
+.button2{
+    background-color: #00d1ff; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+}
+.right {
+  position: absolute;
+  right: 0px;
+  width: 300px;
+  border: 3px solid lightskyblue;
+  padding: 10px;
+}
+.center {  margin: auto;  width: 60%;  border: 3px solid lightskyblue;  padding: 10px;}
+.card2 {  float: left; background: rgba(0, 128, 0, 0.3);box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);  transition: 0.3s;  width: 300px;  border-radius: 5px;  padding: 10px;margin: 10px;}
+.card3 {  float: left; background: rgba(255,0,0, 0.3);box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);  transition: 0.3s;  width: 300px;  border-radius: 5px;  padding: 10px; margin: 10px; }
+.card2:hover {  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);}
+.card3:hover {  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);}
+</style>
+<?php
+include_once("./fonction.php");
+$mode = 0;
+$employerManager = new employerManager(connexion("bdd_hms"));
+$result = $employerManager->getAllEmployer();
+
+$hopitalManager = new hopitalManager(connexion("bdd_hms"));
+$resultHopital = $hopitalManager->getAllHopital();
+?>
+<br>
+
+
+<div class="right">
+    <table style=width:300px;>
+        <tr>
+            <td>
+            <p>Hopital </p>
+            </td>
+            <td>
+            <form method="post">
+            <?php
+                $contenu =" <select name=hopital id=hopital style=width:150px;>";
+                                foreach($resultHopital as $key => $value){
+                                    $contenu .="<option value=".$value->getIdHopital().">".$value->getNom()."</option>";
+                                }
+                                $contenu .="</select>";
+                                echo $contenu;
+            ?>
+            </td>
+            <td>
+            <input  type="submit" name="rechercheHopital" value="Trouver">
+            </form>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <p>NoEmployer </p>
+            </td>
+            <td>
+            <form method="post">
+            <input type="text" name="noEmp" id="noEmp" pattern="[0-9]{1,30}" maxlength='30' style=width:142px; required>
+            </td>
+            <td>
+            <input  type="submit" name="rechercheNoEmp" value="Trouver">
+            </form>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <p>Nom </p>
+            </td>
+            <td>
+            <form method="post">
+            <input type="text" name="nom" id="nom" maxlength='30' style=width:142px; required>
+            </td>
+            <td>
+            <input  type="submit" name="rechercheNom" value="Trouver">
+            </form>
+            </td>
+        </tr>
+</table>
+</div>
+<form method="post">
+<input class="button button2" type="submit" name="infirmiere" value="Infirmiere">
+<input class="button button2" type="submit" name="medecin" value="Medecin">
+<input class="button button2" type="submit" name="employer" value="Employer">
+<input class="button button2" type="submit" name="ajout" value="Ajouter">
+</form>
+
+<br><br><br><br><br><br><br><br>
+<?php
+if(isset($_POST["ajout"])){
+    $mode = 1;
+    
+}
+if(isset($_POST["rendezvous"])){
+    $mode = 2;
+    $sheduleManager = new sheduleManager(connexion("bdd_hms"));
+    $resultShedule = $sheduleManager->getShedule($_POST["idEmployer"]);
+
+    foreach($resultShedule as $key => $value){
+        $contenu2  = ($value->getDisponibilite() == 1) ? "<div class=card2>":"<div class=card3>";
+        $contenu2 .="<form method='post'><div class=container>";
+        $contenu2 .="        <h3 class=card-title>".$value->getJour()."</h3><hr>";
+        $contenu2 .="        <p class=card-text style=background-color: green>Frais : ".$value->getFrais()."</p>";
+        $contenu2 .="        <p class=card-text>Shedule : ".$value->getShedule()."</p>";
+        $contenu2 .="        <p class=card-text>Place(s) restante(s) : ".$value->getCmpPatient()."</p>";
+        $contenu2 .="    </div></div></form>";
+        echo $contenu2;
+    }
+}
+if(isset($_POST["infirmiere"])){
+    $mode = 0;
+    $result = $employerManager->getInfirmiere(3);
+}
+if(isset($_POST["medecin"])){
+    $mode = 0;
+    $result = $employerManager->getMedecin(1);
+
+}
+if(isset($_POST["employer"])){
+    $mode = 0;
+    $result = $employerManager->getAllEmployer();
+}
+if(isset($_POST["rechercheNoEmp"])){
+    $mode = 0;
+    $result = $employerManager->getNoEmployer($_POST["noEmp"]);
+}
+if(isset($_POST["rechercheNom"])){
+    $mode = 0;
+    $result = $employerManager->getNomEmployer($_POST["nom"]);
+}
+if(isset($_POST["rechercheHopital"])){
+    $mode = 0;
+    $result = $employerManager->getEmployerHopital($_POST["hopital"]);
+}
+if ($mode == 0){
+
+    foreach($result as $key => $value){
+        $posteManager = new posteManager(connexion("bdd_hms"));
+        $resultPoste = $posteManager->getPoste($value->getIdPoste());
+
+        $hopitalManager = new hopitalManager(connexion("bdd_hms"));
+        $resultHopital = $hopitalManager->getHopital($value->getIdHopital());
+
+        $departementManager = new departementManager(connexion("bdd_hms"));
+        $resultDepartement = $departementManager->getDepartement($value->getIdDepartement());
+
+        $resultAllDepartement = $departementManager->getAllDepartement();
+
+        $contenu2  ="<div class=card>";
+        $contenu2 .="<form method='post'><div class=container>";
+        $contenu2 .="<img src=".$value->getPhoto()." alt=Avatar style=width:100%>";
+        $contenu2 .="<h3 class=card-title>".$value->getPrenom()." ".$value->getNom()."</h3><hr>";
+        $contenu2 .="<p>".$value->getCourriel()."</p>";
+        $contenu2 .="<p>".$resultPoste->getPoste()."</p>";
+        $contenu2 .="<p>Hopital ".$resultHopital->getNom()."</p>";
+        $contenu2 .="<p>Département : ".$resultDepartement->getDepartement()."</p>";
+        $contenu2 .="<p>Employer No : ".$value->getIdEmployer()."</p>";
+        $contenu2 .="<p>Pseudo &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=text name=pseudo minlength=6 maxlength=30 value=".$value->getPseudo()." required></p>";
+        $contenu2 .="<p>Mot de passe <input type=password name=motDePasse minlength=6 maxlength=30 value=".$value->getMotDePasse()." required></p>";
+        $contenu2 .="<p>Courriel &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=text name=courriel maxlength=100 value=".$value->getCourriel()." required></p>";
+        $contenu2 .="<p>Département &nbsp;<select name=departement style=width:175px;></p>";
+        foreach($resultAllDepartement as $key => $value2){
+            if($value2->getIdDepartement() == $value->getIdDepartement()){
+            $contenu2 .="<option selected value=".$value2->getIdDepartement().">".$value2->getDepartement()."</option>";
+            }else{
+            $contenu2 .="<option value=".$value2->getIdDepartement().">".$value2->getDepartement()."</option>";
+            }
+        }
+        $contenu2 .="<input type='hidden' name='idEmployer' value=".$value->getIdEmployer().">";
+        $contenu2 .="<input type='hidden' name='idHopital' value=".$value->getIdHopital().">";
+        $contenu2 .="<br><br><input type='submit' style=width:100px name='supprimer' value='Supprimer'>";
+        $contenu2 .="<input type='submit' style=width:100px name='modifier' value='Modifier'>";
+        if($resultPoste->getPoste() == "Medecin"){
+            $contenu2 .="<input type='submit' style=width:100px name='rendezvous' value='Rendez Vous'>";
+        }
+        $contenu2 .="</div></div></form>";
+        echo $contenu2;
+    }
+
+    if(isset($_POST["supprimer"])){
+        $employerManager = new employerManager(connexion("bdd_hms"));
+        $array = array("idEmployer" => $_POST["idEmployer"]);
+        $employer = new employer($array);
+        $employerManager->supprimer($employer);
+        ?>
+        <script>window.location.replace("dashboard/projet/mvc/afficheEmployer");</script><?php
+    }
+    if(isset($_POST['modifier'])){
+        if(!strstr(trim($_POST['courriel']),"@")){
+        echo '<script>alert("Le email est invalide!")</script>';
+        }
+        else{
+        $array = array("pseudo" => trim($_POST['pseudo']),
+                        "idEmployer" => $_POST["idEmployer"],
+                        "motDePasse" => trim($_POST['motDePasse']),
+                        "courriel" => trim($_POST['courriel']),
+                        "idDepartement" => $_POST['departement']);
+    
+        $employer = new employer($array);
+        $employerManager = new employerManager(connexion("bdd_hms"));
+        try{
+        $employerManager->update($employer);?>
+        <script>window.location.replace("dashboard/projet/mvc/afficheEmployer");</script><?php
+        }
+        catch(Exception $e){
+            echo '<script>alert("Modification échoué!")</script>';
+        }
+        }
+    }
+}
+if ($mode == 1){
+    $hopitalManager = new hopitalManager(connexion("bdd_hms"));
+    $resultHopital = $hopitalManager->getAllHopital();
+
+    $departementManager = new departementManager(connexion("bdd_hms"));
+    $resultAllDepartement = $departementManager->getAllDepartement();
+
+    $posteManager = new posteManager(connexion("bdd_hms"));
+    $resultPoste = $posteManager->getAllPoste();
+    ?>
+    <center>
+    <div>
+    <form method="post">
+        <h1 style=color:black>Nouvel Employé</h1>
+        <table>
+            <tr>
+                <td>Prénom  </td>
+                <td><input type="text" name="prenom" maxlength='30' required></td>
+            </tr>
+            <tr>
+                <td>Nom  </td>
+                <td><input type="text" name="nom" maxlength='30' required></td>
+            </tr>
+            <tr>
+                <td>Courriel  </td>
+                <td><input type="text" name="courriel" maxlength=100 required></td>
+            </tr>
+            <tr>
+                <td>Photo  </td>
+                <td><input type="text" name="photo" maxlength='500' required></td>
+            </tr>
+            <tr>
+                <td>Pseudo  </td>
+                <td><input type="text" name="pseudo" minlength="6" maxlength='30' required></td>
+            </tr>
+            <tr>
+                <td>Mot de passe  </td>
+                <td><input type="password" name="motDePasse" minlength="6" maxlength='30' required></td>
+            </tr>
+            <tr>
+                <td>Département  </td>
+                <td>
+                <?php
+                $contenu1 ="<select name=departement style=width:178px;>";
+                foreach($resultAllDepartement as $key => $value){
+                    $contenu1 .="<option value=".$value->getIdDepartement().">".$value->getDepartement()."</option>";
+                }
+                $contenu1 .="</select>";
+                echo $contenu1;
+                ?>
+                </td>
+            </tr>
+            <tr>
+                <td>Hopital  </td>
+                <td>
+                <?php
+                $contenu1 ="<select name=hopital style=width:178px;>";
+                foreach($resultHopital as $key => $value){
+                    $contenu1 .="<option value=".$value->getIdHopital().">".$value->getNom()."</option>";
+                }
+                $contenu1 .="</select>";
+                echo $contenu1;
+                ?>
+                </td>
+            </tr>
+            <tr>
+                <td>Poste  </td>
+                <td>
+                <?php
+                $contenu1 ="<select name=poste style=width:178px;>";
+                foreach($resultPoste as $key => $value){
+                    $contenu1 .="<option value=".$value->getIdPoste().">".$value->getPoste()."</option>";
+                }
+                $contenu1 .="</select>";
+                echo $contenu1;
+                ?>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="submit" name="inscrire" value="Ajouter"></td>
+            </tr>
+        <table>
+    </form>
+    </div>
+    </center>
+<?php
+}
+if(isset($_POST['inscrire'])){
+    if(!strstr(trim($_POST['courriel']),"@")){
+    echo '<script>alert("Le email est invalide!")</script>';
+    }
+    else{
+    $array = array( "prenom" => trim($_POST['prenom']),
+                    "nom" => trim($_POST['nom']),
+                    "courriel" => trim($_POST['courriel']),
+                    "photo" => trim($_POST['photo']),
+                    "pseudo" => trim($_POST['pseudo']),
+                    "motDePasse" => trim($_POST['motDePasse']),
+                    "idPoste" => $_POST['poste'],
+                    "idHopital" => $_POST['hopital'],
+                    "idDepartement" => $_POST['departement']);
+
+    $employer = new employer($array);
+    $employerManager = new employerManager(connexion("bdd_hms"));
+    try{
+    $employerManager->inserer($employer);
+    ?>
+        <script>window.location.replace("dashboard/projet/mvc/afficheEmployer");</script><?php
+    }
+    catch(Exception $e){
+        echo '<script>alert("Ajout échoué!")</script>';
+    }
+    }
+}
+?>

@@ -24,7 +24,9 @@ if(isset($_POST["shedule"])){
     $rendezvousManager = new rendezvousManager(connexion("bdd_hms"));
     $resultRendezvous = $rendezvousManager->getPatientRendezvous($_SESSION["id"]);
 
+    $cmpt = 0;
     foreach($resultShedule as $key => $value){
+        
         $contenu2  = "<div class=card1>";
         $contenu2 .="<form method='post'><div class=container1>";
         $contenu2 .="        <h3 class=card-title>".$value->getJour()."</h3><hr>";
@@ -35,16 +37,17 @@ if(isset($_POST["shedule"])){
         $contenu2 .="        <input type='hidden' name='id' value=".$value->getIdShedule().">";
         $contenu2 .="        <input type='hidden' name='defaultCmp' value=".$value->getCmpPatient().">";
         $contenu2 .="<input type='hidden' name='idHopital' value=".$_POST["idHopital"].">";
-        $contenu2 .="        <input type='submit' name='reserver' id='reserver' value='Réserver'><br>";
+        $contenu2 .="        <input type=submit name=reserver id=reserver".$cmpt." value='Réserver'><br>";
         $contenu2 .="    </div></div></form>";
         echo $contenu2;
 
         foreach($resultRendezvous as $key => $value1){
+
             if($value1->getIdShedule() == $value->getIdShedule()){
-                ;?><script>document.getElementById("reserver").disabled = true; </script><?php
+                ;?><script>document.getElementById("reserver<?php echo $cmpt?>").disabled = true; </script><?php
+                $cmpt ++;
             }
         }
-
     }
 }
 

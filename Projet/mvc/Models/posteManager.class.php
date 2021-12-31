@@ -28,4 +28,13 @@ class posteManager{
         }
         return false;
     }
+    public function getAllPoste(){
+        $query = $this->_db->query("SELECT * FROM poste ");
+        $poste = array();
+        
+        while($data=$query->fetch(PDO::FETCH_ASSOC)){
+            $poste[] = new poste($data);
+        }     
+        return $poste;  
+    }
 }

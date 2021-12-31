@@ -38,4 +38,17 @@ class departementManager{
         }
         return false;
     }
+
+    public function supprimer(departement $departement){
+        $query = $this->_db->prepare("DELETE FROM departement WHERE idDepartement =(:idDepartement)"); 
+        $query->bindValue(":idDepartement",$departement->getIdDepartement());
+        $query->execute();
+    }
+    public function inserer(departement $departement) 
+    {
+        $query = $this->_db->prepare("INSERT into departement(Departement) 
+        VALUES (:departement)");
+        $query->bindValue(":departement",$departement->getDepartement());
+        $query->execute();
+    }
 }

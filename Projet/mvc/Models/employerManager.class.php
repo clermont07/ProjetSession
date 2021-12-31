@@ -44,6 +44,32 @@ class employerManager{
         }
         return false;
     }
+    public function getNoEmployer($id){
+        $query = $this->_db->query("SELECT * FROM employer WHERE idEmployer = ".$id."");
+        $employer = array();
+        while($data=$query->fetch(PDO::FETCH_ASSOC)){
+            $employer[] = new employer($data);
+        }     
+        return $employer;
+    }
+    public function getNomEmployer($nom){
+        $query = $this->_db->query("SELECT * FROM employer WHERE Nom = '".$nom."'");
+        $employer = array();
+        while($data=$query->fetch(PDO::FETCH_ASSOC)){
+            $employer[] = new employer($data);
+        }     
+        return $employer;
+    }
+
+    public function getAllEmployer(){
+        $query = $this->_db->query("SELECT * FROM employer ");
+        $employer = array();
+        
+        while($data=$query->fetch(PDO::FETCH_ASSOC)){
+            $employer[] = new employer($data);
+        }     
+        return $employer;
+    }
 
     public function update(employer $employer) 
     {
@@ -73,5 +99,34 @@ class employerManager{
             $employer[] = new employer($data);
         }     
         return $employer;  
+    }
+    public function getEmployerHopital($hopital){
+        $query = $this->_db->query("SELECT * FROM employer WHERE idHopital = ".$hopital."");
+        $employer = array();
+        
+        while($data=$query->fetch(PDO::FETCH_ASSOC)){
+            $employer[] = new employer($data);
+        }     
+        return $employer;  
+    }
+    public function supprimer(employer $employer){
+        $query = $this->_db->prepare("DELETE FROM employer WHERE idEmployer =(:idEmployer)"); 
+        $query->bindValue(":idEmployer",$employer->getIdEmployer());
+        $query->execute();
+    }
+    public function inserer(employer $employer) 
+    {
+        $query = $this->_db->prepare("INSERT into employer(Prenom,Nom,Courriel,Photo,Pseudo,MotDePasse,idDepartement,idHopital,idPoste) 
+        VALUES (:prenom,:nom,:courriel,:photo,:pseudo,:motDePasse,:idDepartement,:idHopital,:idPoste)"); 
+        $query->bindValue(":prenom",$employer->getPrenom());
+        $query->bindValue(":nom",$employer->getNom());
+        $query->bindValue(":courriel",$employer->getCourriel());
+        $query->bindValue(":photo",$employer->getPhoto());
+        $query->bindValue(":pseudo",$employer->getPseudo());
+        $query->bindValue(":motDePasse",$employer->getMotDePasse());
+        $query->bindValue(":idDepartement",$employer->getIdDepartement());
+        $query->bindValue(":idHopital",$employer->getIdHopital());
+        $query->bindValue(":idPoste",$employer->getIdPoste());
+        $query->execute();
     }
 }
