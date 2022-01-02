@@ -222,7 +222,12 @@ function affiche($resultRendezvous){
         $contenu2 .="        <input type='hidden' name='frais' value=".$resultShedule->getFrais().">";
         $contenu2 .="        <input type='hidden' name='id' value=".$value->getIdRendezvous().">";
         $contenu2 .="        <input type='hidden' name='idPatient' value=".$resultPatient->getIdPatient().">";
-        $contenu2 .="        <input type='submit' style=width:75px name='facturer' value='Facturer'><input type='submit' style=width:75px name='supprimer' value='Supprimer'><input type='submit' style=width:75px name='modifier' value='Modifier'><input type='submit' style=width:75px name='transferer' value='Transférer'><br>";
+        $contenu2 .="        <input type='submit' style=width:68px name='facturer' value='Facturer'>";
+        if($_SESSION['idPoste'] == 1){
+        $contenu2 .="        <input type='submit' style=width:74px name='supprimer' value='Supprimer'>";
+        $contenu2 .="        <input type='submit' style=width:68px name='modifier' value='Modifier'>";
+        $contenu2 .="        <input type='submit' style=width:74px name='transferer' value='Transférer'><br>";
+        }
         $contenu2 .="    </div></div></form>";
         echo $contenu2;
     }

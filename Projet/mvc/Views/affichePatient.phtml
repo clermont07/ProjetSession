@@ -67,6 +67,74 @@ if(isset($_POST['trans'])){
 
     echo "<center><p style=color:green;>Patient Transféré!</p></center>";
 }
+if(isset($_POST['facture'])){
+    $debut = 1;
+    
+
+
+
+    $factureManager = new factureManager(connexion("bdd_hms"));
+    $resultFacture = $factureManager->getFacture($_POST["idPatient"]);
+    
+    $patientManager = new patientManager(connexion("bdd_hms"));
+    $resultPatient = $patientManager->getPatient($_POST["idPatient"]);
+    
+    foreach($resultFacture as $key => $value){
+        $employerManager = new employerManager(connexion("bdd_hms"));
+        $resultEmployer = $employerManager->getEmployer($value->getIdEmployer());
+        
+        $hopitalManager = new hopitalManager(connexion("bdd_hms"));
+        $resultHopital = $hopitalManager->getHopital($value->getIdHopital());
+    ?>
+    <br><center>
+        <table style="border: 5px solid lightskyblue;width: 600px;">
+            <tr>
+                <td colspan="2"><center><h1><b><?php echo '<p style="color:blue">Facture </p> '?></b></h1><center></td>
+            </tr>
+            <tr>
+                <td style="width: 50%;"><h3><b>Medecin</b> <?php echo $resultEmployer->getNom()." ".$resultEmployer->getPrenom()  ;?></h3></td>
+                <td>  &emsp; &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<?php echo $value->getDate();?> <td>
+            </tr>
+            <tr>
+                <td style="width: 50%;"><b><?php echo $resultHopital->getNom();?></b></td>
+            </tr>
+            <tr>
+                <td style="width: 50%;"><b><?php echo $resultHopital->getAdresse();?></b></td>
+            </tr>
+            <tr>
+                <td style="width: 50%;"><b><?php echo $resultHopital->getVille();?></b></td>
+            </tr>
+            <tr>
+                <td style="width: 50%;"><b><?php echo $resultHopital->getCodePostal();?></b></td>
+            </tr>
+            <tr>
+                <td style="width: 50%;"><b><?php echo $resultHopital->getTelephone();?></b></td>
+            </tr>
+            <tr>
+                <td  colspan="2"><hr style="height:2px;color:blue;background-color:blue"><br></td>
+            </tr>
+            <tr>
+                <td>Nom patient :<?php  echo $resultPatient->getNom(); ?></td>
+                <td>&emsp;&emsp;&emsp;Numéro téléphone :<?php  echo $resultPatient->getTelephone(); ?></td>
+            </tr>
+            <tr>
+                <td  colspan="2"><br><b>Cout :</b><?php  echo $value->getAvantTaxe(); ?> $</td>
+            </tr>
+            <tr>
+                <td  colspan="2"><b>Tps :</b><?php  echo $value->getTps(); ?> $</td>
+            </tr>
+            <tr>
+                <td  colspan="2"><b>Tvq :</b><?php  echo $value->getTvq(); ?> $</td>
+            </tr>
+            <tr>
+                <td  colspan="2"><b>Total :</b><?php  echo $value->getPrixTotal(); ?> $</td>
+            </tr>
+            </table>
+    </center>
+    <br>
+    <?php
+    }
+}
 if($debut == 0){
 ?>
 

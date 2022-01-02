@@ -8,6 +8,7 @@
 <div class="topnav">
     <a class="active" style="float:right" href="dashboard/projet/mvc/deco">Déconnexion</a>
     <a class="active" style="float:right" href="dashboard/projet/mvc/shedule">Shedule</a>
+    <a class="active" style="float:right" href="dashboard/projet/mvc/rendezvous">Rendez vous</a>
     <a class="active" style="float:right" href="dashboard/projet/mvc/gestionpatient">Patient</a>
     <a class="active" style="float:right" href="dashboard/projet/mvc/profil">Profil</a>
 </div>

@@ -75,6 +75,28 @@ if(isset($_POST['mofifier'])){
         }
     }
   }
+    $message = $resultPatient->getPseudo();
+    $key = hex2bin('000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f');
+
+    $encrypted = SaferCrypto::encrypt($message, $key);
+    $decrypted = SaferCrypto::decrypt($encrypted, $key);
+
+    if(isset($_POST["cryptage"])){
+        if($_SESSION["crypter"] == true){
+            $_SESSION["crypter"] = false;
+        }
+        else{
+            $_SESSION["crypter"] = true;
+        }
+    }
+    else{
+        $_SESSION["crypter"] = true;
+    }
+    if($_SESSION["crypter"] == true){
+        $crypter = $encrypted;
+    }else{
+        $crypter = $decrypted;
+    }
 ?>
 
 <center>
@@ -82,6 +104,10 @@ if(isset($_POST['mofifier'])){
     <form method="post">
         <h1 style=color:black>Gestion compte</h1>
         <table>
+            <tr>
+                <td>Pseudo  </td>
+                <td><textarea style=width:170px; disabled> <?php echo $crypter;?></textarea ></td>
+            </tr>
             <tr>
                 <td>Prénom  </td>
                 <td><input type="text" name="prenom" maxlength='30' value="<?php echo $resultPatient->getPrenom();?>" required></td>
@@ -163,7 +189,7 @@ if(isset($_POST['mofifier'])){
             </tr>
             <tr>
                 <td></td>
-                <td><input type="submit" name="mofifier" value="Modifier"></td>
+                <td><input type="submit" name="mofifier" value="Modifier"><input type="submit" name="cryptage" value="Cryptage"></td>
             </tr>
         <table>
     </form>
