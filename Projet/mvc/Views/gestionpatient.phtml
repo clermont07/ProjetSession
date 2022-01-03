@@ -1,5 +1,6 @@
 <?php
 include_once("./fonction.php");
+include_once("./crytage.php");
 
 $sexeManager = new sexeManager(connexion("bdd_hms"));
 $resultSexe = $sexeManager->getAllSexe();
@@ -14,7 +15,7 @@ $resultSang = $sangManager->getAllSang();
         <table>
             <tr><form method="post">
                 <td>Recherche patient  </td>
-                <td><input type="text" name="assuranceMaladieTrouver" style="width:42%"; pattern="[A-Z]{4}[0-9]{8}" placeholder="AAAA12345678" maxlength='20' required><input type="submit" name="trouver" value="Trouver"></td>
+                <td><input type="text" name="assuranceMaladieTrouver" style="width:42%"; pattern="[A-Z]{4}[0-9]{8}" placeholder="AAAA12345678" maxlength='20' required><input type="submit" class="Buttons buttons" name="trouver" value="Trouver"></td>
                 </form>
             </tr>
             <tr>
@@ -101,7 +102,7 @@ $resultSang = $sangManager->getAllSang();
             </tr>
             <tr>
                 <td></td>
-                <td><input type="submit" name="inscrire" style="width:37%" value="Inscrire"><input type="submit" style="width:37%" name="modifier" value="Modifier"></td>
+                <td><input type="submit" class="Buttons buttons" name="inscrire" style="width:37%" value="Inscrire"><input type="submit" style="width:37%" class="Buttons buttons" name="modifier" value="Modifier"></td>
             </tr>
         <table>
     </form>
@@ -112,6 +113,7 @@ $resultSang = $sangManager->getAllSang();
                 echo '<script>alert("Entrer une date de naissance valide!")</script>';
             }
             else{
+                $msg = encryp(trim($_POST['motDePasse']));
                 $array = array("prenom" => trim($_POST['prenom']),
                 "description" => trim($_POST['description']),
                 "nom" => trim($_POST['nom']),
@@ -125,7 +127,7 @@ $resultSang = $sangManager->getAllSang();
                 "paysNaissance" => trim($_POST['paysNaissance']),
                 "dateNaissance" => $_POST['dateNaissance'],
                 "pseudo" => trim($_POST['pseudo']),
-                "motDePasse" => trim($_POST['motDePasse']));
+                "motDePasse" => $msg);
 
                 $patient = new patient($array);
                 $patientManager = new patientManager(connexion("bdd_hms"));
@@ -149,7 +151,7 @@ $resultSang = $sangManager->getAllSang();
                 $resultRendezvous = $rendezvousManager->getValidationRendezvous($result->getIdPatient(),$_SESSION["idHopital"]);
                     
                 if($resultRendezvous != null){
-
+                    $msg = decryp($result->getMotDePasse());
                     $_SESSION['idPatient'] = $result->getIdPatient();
                     ?>
                     <script>document.getElementById("prenom").value = '<?php  echo $result->getPrenom(); ?>'</script>
@@ -165,7 +167,7 @@ $resultSang = $sangManager->getAllSang();
                     <script>document.getElementById("paysNaissance").value = '<?php  echo $result->getPaysNaissance(); ?>'</script>
                     <script>document.getElementById("dateNaissance").value = '<?php  echo $result->getDateNaissance(); ?>'</script>
                     <script>document.getElementById("pseudo").value = '<?php  echo $result->getPseudo(); ?>'</script>
-                    <script>document.getElementById("motDePasse").value = '<?php  echo $result->getMotDePasse(); ?>'</script>
+                    <script>document.getElementById("motDePasse").value = '<?php  echo $msg; ?>'</script>
                     <?php
                 }
                 else{
@@ -178,6 +180,7 @@ $resultSang = $sangManager->getAllSang();
                 echo '<script>alert("Entrer une date de naissance valide!")</script>';
             }
             else{
+                $crypter = encryp($_POST['motDePasse']);
                 $array = array("prenom" => trim($_POST['prenom']),
                 "idPatient" => $_SESSION["idPatient"],
                 "description" => trim($_POST['description']),
@@ -192,7 +195,7 @@ $resultSang = $sangManager->getAllSang();
                 "paysNaissance" => trim($_POST['paysNaissance']),
                 "dateNaissance" => $_POST['dateNaissance'],
                 "pseudo" => trim($_POST['pseudo']),
-                "motDePasse" => trim($_POST['motDePasse']));
+                "motDePasse" => $crypter);
 
                 $patient = new patient($array);
                 $patientManager = new patientManager(connexion("bdd_hms"));

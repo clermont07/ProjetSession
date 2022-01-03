@@ -63,9 +63,9 @@ if(isset($_POST['ajouter'])){
         $contenu1 .="<option value=".$value->getIdDepartement().">".$value->getDepartement()."</option>";
     }
     $contenu1 .="</select>";
-    $contenu1 .="<input type='submit' style=width:100px name='supprimer' value='Retirer'></form>&nbsp;&nbsp;";
+    $contenu1 .="<input type='submit' class='Buttons buttons' style=width:100px name='supprimer' value='Retirer'></form>&nbsp;&nbsp;";
     $contenu1 .="<form method='post'>&nbsp;&nbsp;&nbsp;&nbsp;Nouveau :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=text name=dep maxlength=30 placeholder=Departement required>";
-    $contenu1 .="<input type='submit' style=width:100px name='ajouter' value='Ajouter'></form>";
+    $contenu1 .="<input type='submit' class='Buttons buttons' style=width:100px name='ajouter' value='Ajouter'></form>";
     echo $contenu1;?>
 </div>
 <center>
@@ -82,7 +82,7 @@ foreach($result as $key => $value){
     $contenu .="<p class=card-text>Code Postal : <input type=text name=codePostal pattern=[A-Z]{1}[0-9]{1}[A-Z]{1}[0-9]{1}[A-Z]{1}[0-9]{1} value='".$value->getCodePostal()."' required></p>";
     $contenu .="<p class=card-text>Telephone :&nbsp;&nbsp;&nbsp; <input type=text name=telephone pattern=[0-9]{10} value='".$value->getTelephone()."' required></p><br>";
     $contenu .="<input type='hidden' name='idHopital' value=".$value->getIdHopital().">";
-    $contenu .="<input type='submit' style=width:100px name='modifier' value='Modifier'>";
+    $contenu .="<input type='submit' style=width:100px class='Buttons buttons' name='modifier' value='Modifier'>";
     $contenu .="</div>";
     $contenu .="</div></form>";
     echo $contenu;

@@ -15,7 +15,7 @@ $rendezvousManager = new rendezvousManager(connexion("bdd_hms"));
 <br>
 <center>
     <form method="post">
-        Recherche patient <input type="text" name="assuranceMaladieTrouver" style="width:200px"; pattern="[A-Z]{4}[0-9]{8}" placeholder="AAAA12345678" maxlength='20' required><input type="submit" name="trouver" value="Trouver"></td>
+        Recherche patient <input type="text" name="assuranceMaladieTrouver" style="width:200px"; pattern="[A-Z]{4}[0-9]{8}" placeholder="AAAA12345678" maxlength='20' required><input type="submit" class='Buttons buttons' name="trouver" value="Trouver"></td>
     </form>
 </center>
 
@@ -46,7 +46,7 @@ if(isset($_POST['transferer'])){
                 $contenu2 .="        <input type='hidden' name='idEmp' value=".$value1->getIdEmployer().">";
                 $contenu2 .="        <input type='hidden' name='idHopital' value=".$value1->getIdHopital().">";
                 $contenu2 .="        <input type='hidden' name='idPatient' value=".$_POST["idPatient"].">";
-                $contenu2 .="        <input type='submit' style=width:100px name='trans' value='Transférer'><br>";
+                $contenu2 .="        <input type='submit' class='Buttons buttons' style=width:100px name='trans' value='Transférer'><br>";
                 $contenu2 .="    </div></div></form>";
                 echo $contenu2;
             }
@@ -133,7 +133,7 @@ if(isset($_POST['modifier'])){
             }
         }
         $contenu2 .="</select>";
-        $contenu2 .="<br><br><input type='submit' style=width:100px name='sauvegarder' value='Sauvegarder'><br>";
+        $contenu2 .="<br><br><input type='submit' class='Buttons buttons' style=width:100px name='sauvegarder' value='Sauvegarder'><br>";
         $contenu2 .="</div></div></form></center>";
         echo $contenu2;
     }
@@ -222,11 +222,11 @@ function affiche($resultRendezvous){
         $contenu2 .="        <input type='hidden' name='frais' value=".$resultShedule->getFrais().">";
         $contenu2 .="        <input type='hidden' name='id' value=".$value->getIdRendezvous().">";
         $contenu2 .="        <input type='hidden' name='idPatient' value=".$resultPatient->getIdPatient().">";
-        $contenu2 .="        <input type='submit' style=width:68px name='facturer' value='Facturer'>";
+        $contenu2 .="        <input type='submit' class='Buttons buttons' style=width:68px name='facturer' value='Facturer'>";
         if($_SESSION['idPoste'] == 1){
-        $contenu2 .="        <input type='submit' style=width:74px name='supprimer' value='Supprimer'>";
-        $contenu2 .="        <input type='submit' style=width:68px name='modifier' value='Modifier'>";
-        $contenu2 .="        <input type='submit' style=width:74px name='transferer' value='Transférer'><br>";
+        $contenu2 .="        <input type='submit' class='Buttons buttons' style=width:74px name='supprimer' value='Supprimer'>";
+        $contenu2 .="        <input type='submit' class='Buttons buttons' style=width:68px name='modifier' value='Modifier'>";
+        $contenu2 .="        <input type='submit' class='Buttons buttons' style=width:74px name='transferer' value='Transférer'><br>";
         }
         $contenu2 .="    </div></div></form>";
         echo $contenu2;

@@ -1,18 +1,26 @@
 <?php
+include_once("./crytage.php");
+
 if (isset($_POST["connection"])){
     if (isset($_POST["pseudo"]) && isset($_POST["motDePasse"])){
         if($_POST["poste"] == "patient"){
-            $array = array("pseudo" => $_POST['pseudo'],"motDePasse" => $_POST['motDePasse']);
+            $msg = encryp($_POST['motDePasse']);
+            $array = array("pseudo" => $_POST['pseudo'],"motDePasse" => $msg );
             $patient = new patient($array);
             $patientManager = new patientManager(connexion("bdd_hms"));
             $results = $patientManager->getPatientLog($patient);
         }
         if($_POST["poste"] == "employer"){
-            $array = array("pseudo" => $_POST['pseudo'],"motDePasse" => $_POST['motDePasse']);
+            $array = array("pseudo" => $_POST['pseudo']);
             $employer = new employer($array);
             $employerManager = new employerManager(connexion("bdd_hms"));
             $results = $employerManager->getEmployerLog($employer);
         }
+        if($results != false){
+            if(decryp($results->getMotDePasse())!= $_POST["motDePasse"]){
+               $results = false;
+            }
+       }
         if ($results != false) 
         {
             $_SESSION['pseudo'] = $_POST['pseudo'];
@@ -53,7 +61,7 @@ if (isset($_POST["connection"])){
         </select><br><br>
         <input type="text" name="pseudo" placeholder="Pseudo" id="pseudo" minlength="6" maxlength='30' required><br><br>
         <input type="password" name="motDePasse" placeholder="Mot de passe" id="motDePasse" minlength="6" maxlength='30' required><br><br>
-        <input type="submit" name="connection" value="Connecter"><br><br>
+        <input type="submit" class="Buttons buttons" name="connection" value="Connecter"><br><br>
     </form>
 </div>
 <br><br><br><br><br><br><br><br><br><br><br><br>

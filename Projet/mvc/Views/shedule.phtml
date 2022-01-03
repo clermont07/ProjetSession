@@ -81,7 +81,7 @@ for($b = 1 ; $b <= 5; $b++){
 }
 $contenu1 .="</select>";
 $contenu1 .="</select><br><br>";
-$contenu1 .="<center><input type=submit name=cree value=Créé></center>";
+$contenu1 .="<center><input type=submit name=cree class='Buttons buttons' value=Créé></center>";
 $contenu1 .="</div>";
 $contenu1 .="</form><br><br><br>";
 echo $contenu1;
@@ -95,7 +95,7 @@ foreach($resultShedule as $key => $value){
     $contenu2 .="        <p class=card-text>Shedule : ".$value->getShedule()."</p>";
     $contenu2 .="        <p class=card-text>Place(s) restante(s) : ".$value->getCmpPatient()."</p>";
     $contenu2 .="        <input type='hidden' name='id' value=".$value->getIdShedule().">";
-    $contenu2 .="        <input type='submit' name='supprimer' value='Supprimer'><br>";
+    $contenu2 .="        <input type='submit' class='Buttons buttons' name='supprimer' value='Supprimer'><br>";
     $contenu2 .="    </div></div></form>";
     echo $contenu2;
 }

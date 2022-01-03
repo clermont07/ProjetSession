@@ -22,8 +22,7 @@ class employerManager{
     public function getEmployerLog(employer $employer) 
     {
         $pseudo = $employer->getPseudo();
-        $motDePasse = $employer->getMotDePasse();
-        $req = $this->_db->query("SELECT  idPoste, Pseudo ,idEmployer, MotDePasse FROM employer WHERE  Pseudo='".$pseudo."' AND MotDePasse='".$motDePasse."'");
+        $req = $this->_db->query("SELECT  idPoste, Pseudo ,idEmployer, MotDePasse FROM employer WHERE  Pseudo='".$pseudo."'");
         $data = $req->fetch(PDO::FETCH_ASSOC);
 
         if($data != Null){

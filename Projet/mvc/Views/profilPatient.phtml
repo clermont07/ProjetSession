@@ -6,6 +6,7 @@
 .container1 {  width:100%;}
 </style>
 <?php
+include_once("./crytage.php");
 include_once("./fonction.php");
 
 $patientManager = new patientManager(connexion("bdd_hms"));
@@ -49,6 +50,7 @@ if(isset($_POST['mofifier'])){
         echo '<script>alert("Entrer une date de naissance valide!")</script>';
     }
     else{
+        $msg = encryp(trim($_POST['motDePasse']));
         $array = array("idPatient" => $_SESSION["id"],
         "prenom" => trim($_POST['prenom']),
         "nom" => trim($_POST['nom']),
@@ -62,7 +64,7 @@ if(isset($_POST['mofifier'])){
         "paysNaissance" => trim($_POST['paysNaissance']),
         "dateNaissance" => $_POST['dateNaissance'],
         "pseudo" => trim($_POST['pseudo']),
-        "motDePasse" => trim($_POST['motDePasse']));
+        "motDePasse" => $msg);
 
         $patient = new patient($array);
         $patientManager = new patientManager(connexion("bdd_hms"));
@@ -75,28 +77,7 @@ if(isset($_POST['mofifier'])){
         }
     }
   }
-    $message = $resultPatient->getPseudo();
-    $key = hex2bin('000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f');
-
-    $encrypted = SaferCrypto::encrypt($message, $key);
-    $decrypted = SaferCrypto::decrypt($encrypted, $key);
-
-    if(isset($_POST["cryptage"])){
-        if($_SESSION["crypter"] == true){
-            $_SESSION["crypter"] = false;
-        }
-        else{
-            $_SESSION["crypter"] = true;
-        }
-    }
-    else{
-        $_SESSION["crypter"] = true;
-    }
-    if($_SESSION["crypter"] == true){
-        $crypter = $encrypted;
-    }else{
-        $crypter = $decrypted;
-    }
+  $msg = decryp($resultPatient->getMotDePasse());
 ?>
 
 <center>
@@ -104,10 +85,6 @@ if(isset($_POST['mofifier'])){
     <form method="post">
         <h1 style=color:black>Gestion compte</h1>
         <table>
-            <tr>
-                <td>Pseudo  </td>
-                <td><textarea style=width:170px; disabled> <?php echo $crypter;?></textarea ></td>
-            </tr>
             <tr>
                 <td>Prénom  </td>
                 <td><input type="text" name="prenom" maxlength='30' value="<?php echo $resultPatient->getPrenom();?>" required></td>
@@ -185,11 +162,11 @@ if(isset($_POST['mofifier'])){
             </tr>
             <tr>
                 <td>Mot de passe  </td>
-                <td><input type="password" name="motDePasse" minlength="6" maxlength='30' value="<?php echo $resultPatient->getMotDePasse();?>" required></td>
+                <td><input type="password" name="motDePasse" minlength="6" maxlength='30' value="<?php echo $msg;?>" required></td>
             </tr>
             <tr>
                 <td></td>
-                <td><input type="submit" name="mofifier" value="Modifier"><input type="submit" name="cryptage" value="Cryptage"></td>
+                <td><input type="submit" name="mofifier" value="Modifier"></td>
             </tr>
         <table>
     </form>

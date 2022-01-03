@@ -7,6 +7,7 @@ img {  border-radius: 5px 5px 0 0;  width: 300px;  height: 400px;}
 </style>
 
 <?php
+include_once("./crytage.php");
 include_once("./fonction.php");
 
 if(isset($_POST['mofifier'])){
@@ -14,9 +15,10 @@ if(isset($_POST['mofifier'])){
     echo '<script>alert("Le email est invalide!")</script>';
   }
   else{
+    $crypter = encryp($_POST['motDePasse']);
     $array = array("pseudo" => trim($_POST['pseudo']),
                     "idEmployer" => $_SESSION["id"],
-                    "motDePasse" => trim($_POST['motDePasse']),
+                    "motDePasse" => $crypter,
                     "courriel" => trim($_POST['courriel']),
                     "idDepartement" => $_POST['departement']);
 
@@ -50,11 +52,13 @@ $departementManager = new departementManager(connexion("bdd_hms"));
 $resultDepartement = $departementManager->getDepartement($result->getIdDepartement());
 $resultAllDepartement = $departementManager->getAllDepartement();
 
+$msg = decryp($result->getMotDePasse());
+
 $contenu1  ="<form method=post >";
 $contenu1 .="<div id=right>";
 $contenu1 .="<h4><b>Modification</b></h4>";
 $contenu1 .="<p>Pseudo &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=text name=pseudo minlength=6 maxlength=30 value=".$result->getPseudo()." required></p>";
-$contenu1 .="<p>Mot de passe <input type=password name=motDePasse minlength=6 maxlength=30 value=".$result->getMotDePasse()." required></p>";
+$contenu1 .="<p>Mot de passe <input type=password name=motDePasse minlength=6 maxlength=30 value=".$msg." required></p>";
 $contenu1 .="<p>Courriel &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=text name=courriel maxlength=100 value=".$result->getCourriel()." required></p>";
 $contenu1 .="<p>Département &nbsp;<select name=departement style=width:170px;></p>";
 foreach($resultAllDepartement as $key => $value){
@@ -65,7 +69,7 @@ foreach($resultAllDepartement as $key => $value){
     }
 }
 $contenu1 .="</select><br><br>";
-$contenu1 .="<input type=submit name=mofifier value=Modifier>";
+$contenu1 .="<input type=submit class='Buttons buttons' name=mofifier value=Modifier>";
 $contenu1 .="</div>";
 $contenu1 .="</form>";
 echo $contenu1;

@@ -1,4 +1,6 @@
 <?php
+include_once("./crytage.php");
+
 $sexeManager = new sexeManager(connexion("bdd_hms"));
 $resultSexe = $sexeManager->getAllSexe();
 
@@ -88,7 +90,7 @@ $resultSang = $sangManager->getAllSang();
             </tr>
             <tr>
                 <td></td>
-                <td><input type="submit" name="inscrire" value="Inscrire"></td>
+                <td><input class="Buttons buttons" type="submit" name="inscrire" value="Inscrire"></td>
             </tr>
         <table>
     </form>
@@ -99,6 +101,8 @@ $resultSang = $sangManager->getAllSang();
                 echo '<script>alert("Entrer une date de naissance valide!")</script>';
             }
             else{
+                $msg = encryp(trim($_POST['motDePasse']));
+                
                 $array = array("prenom" => trim($_POST['prenom']),
                 "nom" => trim($_POST['nom']),
                 "telephone" => trim($_POST['telephone']),
@@ -111,7 +115,7 @@ $resultSang = $sangManager->getAllSang();
                 "paysNaissance" => trim($_POST['paysNaissance']),
                 "dateNaissance" => $_POST['dateNaissance'],
                 "pseudo" => trim($_POST['pseudo']),
-                "motDePasse" => trim($_POST['motDePasse']));
+                "motDePasse" => $msg);
 
                 $patient = new patient($array);
                 $patientManager = new patientManager(connexion("bdd_hms"));
