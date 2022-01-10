@@ -230,6 +230,50 @@ if ($mode == 0){
         }
     }
 }
+if(isset($_POST['inscrire'])){
+    if(!strstr(trim($_POST['courriel']),"@")){
+    echo '<script>alert("Le email est invalide!")</script>';
+    }
+    else{
+        if(!empty($_FILES["image"]["name"])) { 
+            $fileName = basename($_FILES["image"]["name"]); 
+            $fileType = pathinfo($fileName, PATHINFO_EXTENSION); 
+            $allowTypes = array('jpg','png','jpeg','gif'); 
+
+            if(in_array($fileType, $allowTypes)){ 
+               
+                echo "aa";
+                $image = $_FILES['image']['name']; 
+                $photo = "dashboard/projet/photo/".$image;
+                //move_uploaded_file($_FILES['image']['name'],"dashboard/projet/photo/".$_FILES['image']['name']);
+               
+                $crypter = encryp($_POST['motDePasse']);
+                $array = array( "prenom" => trim($_POST['prenom']),
+                                "nom" => trim($_POST['nom']),
+                                "courriel" => trim($_POST['courriel']),
+                                "photo" => $photo,
+                                "pseudo" => trim($_POST['pseudo']),
+                                "motDePasse" => $crypter,
+                                "idPoste" => $_POST['poste'],
+                                "idHopital" => $_POST['hopital'],
+                                "idDepartement" => $_POST['departement']);
+        
+            $employer = new employer($array);
+            $employerManager = new employerManager(connexion("bdd_hms"));
+    
+            } 
+        }
+
+    try{
+    $employerManager->inserer($employer);
+    ?>
+        <script>window.location.replace("dashboard/projet/mvc/afficheEmployer");</script><?php
+    }
+    catch(Exception $e){
+        echo '<script>alert("Ajout échoué!")</script>';
+    }
+    }
+}
 if ($mode == 1){
     $hopitalManager = new hopitalManager(connexion("bdd_hms"));
     $resultHopital = $hopitalManager->getAllHopital();
@@ -242,7 +286,7 @@ if ($mode == 1){
     ?>
     <center>
     <div>
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         <h1 style=color:black>Nouvel Employé</h1>
         <table>
             <tr>
@@ -259,7 +303,7 @@ if ($mode == 1){
             </tr>
             <tr>
                 <td>Photo  </td>
-                <td><input type="text" name="photo" maxlength='500' required></td>
+                <td><input type="file" name="image" required/></td>
             </tr>
             <tr>
                 <td>Pseudo  </td>
@@ -317,33 +361,5 @@ if ($mode == 1){
     </div>
     </center>
 <?php
-}
-if(isset($_POST['inscrire'])){
-    if(!strstr(trim($_POST['courriel']),"@")){
-    echo '<script>alert("Le email est invalide!")</script>';
-    }
-    else{
-        $crypter = encryp($_POST['motDePasse']);
-    $array = array( "prenom" => trim($_POST['prenom']),
-                    "nom" => trim($_POST['nom']),
-                    "courriel" => trim($_POST['courriel']),
-                    "photo" => trim($_POST['photo']),
-                    "pseudo" => trim($_POST['pseudo']),
-                    "motDePasse" => $crypter,
-                    "idPoste" => $_POST['poste'],
-                    "idHopital" => $_POST['hopital'],
-                    "idDepartement" => $_POST['departement']);
-
-    $employer = new employer($array);
-    $employerManager = new employerManager(connexion("bdd_hms"));
-    try{
-    $employerManager->inserer($employer);
-    ?>
-        <script>window.location.replace("dashboard/projet/mvc/afficheEmployer");</script><?php
-    }
-    catch(Exception $e){
-        echo '<script>alert("Ajout échoué!")</script>';
-    }
-    }
 }
 ?>
