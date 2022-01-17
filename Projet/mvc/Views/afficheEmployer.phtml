@@ -34,6 +34,7 @@ img {  border-radius: 5px 5px 0 0;  width: 300px;  height: 400px;}
 .card2:hover {  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);}
 .card3:hover {  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);}
 </style>
+
 <?php
 include_once("./crytage.php");
 include_once("./fonction.php");
@@ -56,6 +57,8 @@ $resultHopital = $hopitalManager->getAllHopital();
             <td>
             <form method="post">
             <?php
+
+            //Remplis le select avec le nom et id des hopitaux
                 $contenu =" <select name=hopital id=hopital style=width:150px;>";
                                 foreach($resultHopital as $key => $value){
                                     $contenu .="<option value=".$value->getIdHopital().">".$value->getNom()."</option>";
@@ -97,6 +100,7 @@ $resultHopital = $hopitalManager->getAllHopital();
         </tr>
 </table>
 </div>
+<!-- Les boutons de recherche -->
 <form method="post">
 <input class="button button2" type="submit" name="infirmiere" value="Infirmiere">
 <input class="button button2" type="submit" name="medecin" value="Medecin">
@@ -108,8 +112,9 @@ $resultHopital = $hopitalManager->getAllHopital();
 <?php
 if(isset($_POST["ajout"])){
     $mode = 1;
-    
 }
+
+//Affiche les rendez vous de l'employer selectionner
 if(isset($_POST["rendezvous"])){
     $mode = 2;
     $sheduleManager = new sheduleManager(connexion("bdd_hms"));
@@ -126,31 +131,45 @@ if(isset($_POST["rendezvous"])){
         echo $contenu2;
     }
 }
+
+//Affiche les infirmieres
 if(isset($_POST["infirmiere"])){
     $mode = 0;
-    $result = $employerManager->getInfirmiere(3);
+    $result = $employerManager->getEmployerPoste(3);
 }
+
+//Affiche les medecins
 if(isset($_POST["medecin"])){
     $mode = 0;
-    $result = $employerManager->getMedecin(1);
-
+    $result = $employerManager->getEmployerPoste(1);
 }
+
+//Affiche les employer
 if(isset($_POST["employer"])){
     $mode = 0;
     $result = $employerManager->getAllEmployer();
 }
+
+//Affiche l'employer avec la recherche du numero employer
 if(isset($_POST["rechercheNoEmp"])){
     $mode = 0;
-    $result = $employerManager->getNoEmployer($_POST["noEmp"]);
+    $result = $employerManager->getEmployer($_POST["noEmp"]);
 }
+
+//Affiche l'employer avec la recherche de son nom
 if(isset($_POST["rechercheNom"])){
     $mode = 0;
     $result = $employerManager->getNomEmployer($_POST["nom"]);
 }
+
+//Affiche les employer avec la recherche d'un hopital
 if(isset($_POST["rechercheHopital"])){
     $mode = 0;
     $result = $employerManager->getEmployerHopital($_POST["hopital"]);
 }
+
+//Affichage des employer
+
 if ($mode == 0){
 
     foreach($result as $key => $value){
@@ -179,6 +198,8 @@ if ($mode == 0){
         $contenu2 .="<p>Pseudo &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=text name=pseudo minlength=6 maxlength=30 value=".$value->getPseudo()." required></p>";
         $contenu2 .="<p>Mot de passe <input type=password name=motDePasse minlength=6 maxlength=30 value=".$msg." required></p>";
         $contenu2 .="<p>Courriel &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=text name=courriel maxlength=100 value=".$value->getCourriel()." required></p>";
+        
+        //Creation d'une selection de departement en mettant pas defaut le departement de l'employer
         $contenu2 .="<p>Département &nbsp;<select name=departement style=width:175px;></p>";
         foreach($resultAllDepartement as $key => $value2){
             if($value2->getIdDepartement() == $value->getIdDepartement()){
@@ -191,6 +212,8 @@ if ($mode == 0){
         $contenu2 .="<input type='hidden' name='idHopital' value=".$value->getIdHopital().">";
         $contenu2 .="<br><br><input type='submit' style=width:100px class='Buttons buttons' name='supprimer' value='Supprimer'>";
         $contenu2 .="<input type='submit' style=width:100px class='Buttons buttons' name='modifier' value='Modifier'>";
+        
+        //Si cest un medecin on ajout le bouton rendez vous pour les consulter
         if($resultPoste->getPoste() == "Medecin"){
             $contenu2 .="<input type='submit' style=width:100px class='Buttons buttons' name='rendezvous' value='Rendez Vous'>";
         }
@@ -198,6 +221,7 @@ if ($mode == 0){
         echo $contenu2;
     }
 
+    //Fonction qui supprime un employer
     if(isset($_POST["supprimer"])){
         $employerManager = new employerManager(connexion("bdd_hms"));
         $array = array("idEmployer" => $_POST["idEmployer"]);
@@ -206,6 +230,8 @@ if ($mode == 0){
         ?>
         <script>window.location.replace("dashboard/projet/mvc/afficheEmployer");</script><?php
     }
+
+    //Fonction qui modifie un employer
     if(isset($_POST['modifier'])){
         if(!strstr(trim($_POST['courriel']),"@")){
         echo '<script>alert("Le email est invalide!")</script>';
@@ -230,6 +256,8 @@ if ($mode == 0){
         }
     }
 }
+
+//Fonction qui ajoute un employer
 if(isset($_POST['inscrire'])){
     if(!strstr(trim($_POST['courriel']),"@")){
     echo '<script>alert("Le email est invalide!")</script>';
@@ -274,6 +302,8 @@ if(isset($_POST['inscrire'])){
     }
     }
 }
+
+//Interface permettant l'ajout d'une employer
 if ($mode == 1){
     $hopitalManager = new hopitalManager(connexion("bdd_hms"));
     $resultHopital = $hopitalManager->getAllHopital();
@@ -317,6 +347,8 @@ if ($mode == 1){
                 <td>Département  </td>
                 <td>
                 <?php
+
+                //creation d'une selection de departement
                 $contenu1 ="<select name=departement style=width:178px;>";
                 foreach($resultAllDepartement as $key => $value){
                     $contenu1 .="<option value=".$value->getIdDepartement().">".$value->getDepartement()."</option>";
@@ -330,6 +362,8 @@ if ($mode == 1){
                 <td>Hopital  </td>
                 <td>
                 <?php
+
+                //creation d'une selection d'hopital
                 $contenu1 ="<select name=hopital style=width:178px;>";
                 foreach($resultHopital as $key => $value){
                     $contenu1 .="<option value=".$value->getIdHopital().">".$value->getNom()."</option>";
@@ -343,6 +377,8 @@ if ($mode == 1){
                 <td>Poste  </td>
                 <td>
                 <?php
+
+                //creation d'une selection de poste
                 $contenu1 ="<select name=poste style=width:178px;>";
                 foreach($resultPoste as $key => $value){
                     $contenu1 .="<option value=".$value->getIdPoste().">".$value->getPoste()."</option>";

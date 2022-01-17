@@ -7,6 +7,7 @@ $resultFacture = $factureManager->getFacture($_SESSION["id"]);
 $patientManager = new patientManager(connexion("bdd_hms"));
 $resultPatient = $patientManager->getPatient($_SESSION["id"]);
 
+//Pour chaque facture du patient connecter on l'affiche
 foreach($resultFacture as $key => $value){
     $employerManager = new employerManager(connexion("bdd_hms"));
     $resultEmployer = $employerManager->getEmployer($value->getIdEmployer());

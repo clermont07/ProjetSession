@@ -4,21 +4,12 @@ class sheduleManager{
     private $_db;
 
     //constructeur
-    public function __construct($db){
-        $this->setDb($db);
-    }
+    public function __construct($db){        $this->setDb($db);    }
     
-    public function setDb($db){
-        $this->_db = $db;
-    }
-    public function getTest(){
-        return "test";
-    }
-    
-    public function getDB(){
-        return $this->_db;
-    }
+    public function setDb($db){        $this->_db = $db;    }    
+    public function getDB(){        return $this->_db;    }
 
+    //Fonction qui insere une shedule
     public function insertion(shedule $shedule) 
     {
         $query = $this->_db->prepare("INSERT into shedule(Jour,NoEmployer,Shedule,Frais,maxPatient,cmpPatient,Disponibilite) VALUES 
@@ -31,6 +22,7 @@ class sheduleManager{
         $query->execute();
     }
 
+    //Fonction qui selectionne une shedule selon son id
     public function getIdShedule($id){
         $req = $this->_db->query("SELECT * FROM shedule WHERE idShedule = ".$id."");
         $data=$req->fetch(PDO::FETCH_ASSOC);
@@ -41,6 +33,7 @@ class sheduleManager{
         return false;
     }
     
+    //Fonction qui selectionne les shedules selon l'id d'un employer
     public function getShedule($id){
         $query = $this->_db->query("SELECT * FROM shedule WHERE NoEmployer = ".$id."");
         $shedule = array();
@@ -50,6 +43,8 @@ class sheduleManager{
         }     
         return $shedule;  
     }
+
+    //Fonction qui selectionne les shedules selon l'id d'un employer et s'il est disponible
     public function getSheduleDispo($id){
         $query = $this->_db->query("SELECT * FROM shedule WHERE NoEmployer = ".$id." AND Disponibilite > 0");
         $shedule = array();
@@ -60,12 +55,14 @@ class sheduleManager{
         return $shedule;  
     }
 
+    //Fonction qui supprime une shedule selon son id 
     public function supprimer(shedule $shedule){
         $query = $this->_db->prepare("DELETE FROM shedule WHERE idShedule=(:idShedule)"); 
         $query->bindValue(":idShedule",$shedule->getIdShedule());
         $query->execute();
     }
 
+    //Fonction qui modif le cmpPatient d'une shedule selon son id 
     public function updateCmp(shedule $shedule) 
     {
         $query = $this->_db->prepare("UPDATE shedule SET cmpPatient = (:cmpPatient) WHERE idShedule = (:idShedule)"); 
@@ -74,6 +71,7 @@ class sheduleManager{
         $query->execute();
     }
 
+    //Fonction qui modif la disponibiliter d'une shedule selon son id 
     public function updateDisponibilite(shedule $shedule) 
     {
         $query = $this->_db->prepare("UPDATE shedule SET Disponibilite = (:Disponibilite) WHERE idShedule = (:idShedule)"); 
@@ -81,6 +79,4 @@ class sheduleManager{
         $query->bindValue(":idShedule",$shedule->getIdShedule());
         $query->execute();
     }
-
-
 }

@@ -4,21 +4,12 @@ class posteManager{
     private $_db;
 
     //constructeur
-    public function __construct($db){
-        $this->setDb($db);
-    }
+    public function __construct($db){        $this->setDb($db);    }
     
-    public function setDb($db){
-        $this->_db = $db;
-    }
-    public function getTest(){
-        return "test";
-    }
-    
-    public function getDB(){
-        return $this->_db;
-    }
+    public function setDb($db){        $this->_db = $db;    }    
+    public function getDB(){        return $this->_db;    }
 
+    //Fonction qui selection un poste selon son id
     public function getPoste($id){
         $req = $this->_db->query("SELECT * FROM poste WHERE idPoste = ".$id."");
         $data=$req->fetch(PDO::FETCH_ASSOC);
@@ -28,6 +19,8 @@ class posteManager{
         }
         return false;
     }
+
+    //Fonction qui selectionne tous les postes
     public function getAllPoste(){
         $query = $this->_db->query("SELECT * FROM poste ");
         $poste = array();

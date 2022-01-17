@@ -4,21 +4,12 @@ class factureManager{
     private $_db;
 
     //constructeur
-    public function __construct($db){
-        $this->setDb($db);
-    }
+    public function __construct($db){        $this->setDb($db);    }
     
-    public function setDb($db){
-        $this->_db = $db;
-    }
-    public function getTest(){
-        return "test";
-    }
+    public function setDb($db){        $this->_db = $db;    }
+    public function getDB(){        return $this->_db;    }
     
-    public function getDB(){
-        return $this->_db;
-    }
-    
+    //Fonction qui insere une facture
     public function Insert(facture $facture) 
     {
         $query = $this->_db->prepare("INSERT into facture(Date,Tps,Tvq,AvantTaxe,PrixTotal,idPatient,idHopital,idEmployer) VALUES
@@ -35,6 +26,8 @@ class factureManager{
         $query->bindValue(":idEmployer",$facture->getIdEmployer());
         $query->execute();
     }
+
+    //Fonction qui selectionne une facture selon son id
     public function getFacture($id){
         $query = $this->_db->query("SELECT * FROM facture WHERE idPatient = ".$id."");
         $facture = array();

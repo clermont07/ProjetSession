@@ -10,10 +10,14 @@ img {  border-radius: 5px 5px 0 0;  width: 300px;  height: 400px;}
 include_once("./crytage.php");
 include_once("./fonction.php");
 
+//Function de modification du profil des employer
 if(isset($_POST['mofifier'])){
+
+  //Si le courriel saisi n'a pas dans la chaine de caractere un @ on lui affiche un message erreur
   if(!strstr(trim($_POST['courriel']),"@")){
     echo '<script>alert("Le email est invalide!")</script>';
   }
+  //Si les donnees son valide on fais la mise a jour
   else{
     $crypter = encryp($_POST['motDePasse']);
     $array = array("pseudo" => trim($_POST['pseudo']),
@@ -32,6 +36,7 @@ if(isset($_POST['mofifier'])){
     }
   }
 }
+
 
 $idEmployer = $_SESSION["id"];
 
@@ -54,12 +59,15 @@ $resultAllDepartement = $departementManager->getAllDepartement();
 
 $msg = decryp($result->getMotDePasse());
 
+//Creation de la section de modification du profil
 $contenu1  ="<form method=post >";
 $contenu1 .="<div id=right>";
 $contenu1 .="<h4><b>Modification</b></h4>";
 $contenu1 .="<p>Pseudo &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=text name=pseudo minlength=6 maxlength=30 value=".$result->getPseudo()." required></p>";
 $contenu1 .="<p>Mot de passe <input type=password name=motDePasse minlength=6 maxlength=30 value=".$msg." required></p>";
 $contenu1 .="<p>Courriel &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=text name=courriel maxlength=100 value=".$result->getCourriel()." required></p>";
+
+//Cree une selection de departement en selectionnant par defaut le departement de l'employer connecter
 $contenu1 .="<p>Département &nbsp;<select name=departement style=width:170px;></p>";
 foreach($resultAllDepartement as $key => $value){
     if($value->getIdDepartement() == $result->getIdDepartement()){
@@ -74,6 +82,7 @@ $contenu1 .="</div>";
 $contenu1 .="</form>";
 echo $contenu1;
 
+//Determine le profil de quel employer affiche avec ses informations
 $contenu2  ="<br><div class=card>";
 $contenu2 .="<img src=".$result->getPhoto()." alt=Avatar style=width:100%>";
 $contenu2 .="<div class=container>";

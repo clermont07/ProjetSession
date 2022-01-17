@@ -8,12 +8,14 @@ $sangManager = new groupeSanguinManager(connexion("bdd_hms"));
 $resultSang = $sangManager->getAllSang();
 ?>
 
+<!-- Affichage de la navbar -->
 <div class="topnav">
     <a class="active" style="float:right" href="dashboard/projet/mvc/connection">Se connecter</a>
     <a class="active" style="float:right" href="dashboard/projet/mvc/inscription">Inscription</a>
     <a class="active" style="float:right" href="dashboard/projet/mvc/accueil">Accueil</a>
 </div>
 
+<!-- Affichage de l'interface du document d'inscription -->
 <center>
 <div>
     <form method="post">
@@ -47,6 +49,8 @@ $resultSang = $sangManager->getAllSang();
                 <td>Sexe  </td>
                 <td>
                 <?php
+
+                //Cree une selection des genres
                 $contenu ="<select name=sexe style=width:100%;>";
                 foreach($resultSexe as $key => $value){
                     $contenu .="<option value=".$value->getIdSexe().">".$value->getGenre()."</option>";
@@ -59,6 +63,8 @@ $resultSang = $sangManager->getAllSang();
                 <td>Groupe Sanguin  </td>
                 <td>
                 <?php
+
+                //Cree une selection des groupes sanguins
                 $contenu1 ="<select name=grpSang style=width:100%;>";
                 foreach($resultSang as $key => $value){
                     $contenu1 .="<option value=".$value->getIdGrpSang().">".$value->getGroupeSanguin()."</option>";
@@ -96,7 +102,11 @@ $resultSang = $sangManager->getAllSang();
     </form>
 
     <?php
+
+        //Fonction qui permet l'inscription
         if(isset($_POST['inscrire'])){
+
+            //Verification de la saisie de la date 
             if($_POST["dateNaissance"] > date("Y-m-d")){
                 echo '<script>alert("Entrer une date de naissance valide!")</script>';
             }
@@ -120,6 +130,7 @@ $resultSang = $sangManager->getAllSang();
                 $patient = new patient($array);
                 $patientManager = new patientManager(connexion("bdd_hms"));
                 try{
+                //Creation d'un patient
                 $patientManager->insertion($patient);
                 echo "<center><p style=color:green;>Bonjour ".$_POST["prenom"].", vous êtes inscrit!</p></center>";
                 }

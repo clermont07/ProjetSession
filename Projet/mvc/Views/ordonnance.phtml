@@ -14,6 +14,7 @@ $result = $employerManager->getEmployer($idEmployer);
 $hopitalManager = new hopitalManager(connexion("bdd_hms"));
 $resultHopital = $hopitalManager->getHopital($result->getIdHopital());
 
+//Permet de faire la recherche d'un patient
 ?>
 <br>
 <center>
@@ -22,6 +23,8 @@ Recherche patient <input type="text" name="assuranceMaladieTrouver" style="width
 </form>
 
 <br><br>
+
+<!-- Creation de l'affichage -->
 <form method="post">
 <table style="border: 5px solid lightskyblue;width: 600px;">
 <tr>
@@ -50,16 +53,20 @@ Recherche patient <input type="text" name="assuranceMaladieTrouver" style="width
     <td  colspan="2"><hr style="height:2px;color:blue;background-color:blue"><br></td>
 </tr>
 <?php
+
+//Fontion qui permet de trouver un patient 
 if(isset($_POST['trouver'])){
     $array = array("assuranceMaladie" => $_POST['assuranceMaladieTrouver']);
     $patient = new patient($array);
     $patientManager = new patientManager(connexion("bdd_hms"));
     $resultPatient = $patientManager->getGestionPatient($patient);
 
+    //Si un patient est trouver
     if($resultPatient != null){
         $rendezvousManager = new rendezvousManager(connexion("bdd_hms"));
         $resultRendezvous = $rendezvousManager->getValidationRendezvous($resultPatient->getIdPatient(),$_SESSION["idHopital"]);
             
+        //Si le patient a un rendez vous avec le medecin de la session on affiche l'information du patient et permet une saisi de prescription
         if($resultRendezvous != null){
             $_SESSION['idPatient'] = $resultPatient->getIdPatient();?>
             <tr>
@@ -90,6 +97,8 @@ if(isset($_POST['trouver'])){
 ?>
 </center>
 <?php
+
+//Fonction qui permet la creation d'une prescription
 if(isset($_POST['prescrire'])){
     $array = array("date" => date("Y-m-d"),
     "description" => trim($_POST['description']),

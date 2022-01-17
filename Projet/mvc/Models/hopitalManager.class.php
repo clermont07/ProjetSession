@@ -8,17 +8,10 @@ class hopitalManager{
         $this->setDb($db);
     }
     
-    public function setDb($db){
-        $this->_db = $db;
-    }
-    public function getTest(){
-        return "test";
-    }
-    
-    public function getDB(){
-        return $this->_db;
-    }
+    public function setDb($db){        $this->_db = $db;    }    
+    public function getDB(){        return $this->_db;    }
 
+    //Fonction qui selectionne tous les hopitaux
     public function getAllHopital(){
         $query = $this->_db->query("SELECT * FROM hopital ");
         $hopital = array();
@@ -29,6 +22,7 @@ class hopitalManager{
         return $hopital;  
     }
 
+    //Fonction qui selectionne un hopital selon son id
     public function getHopital($id){
         $req = $this->_db->query("SELECT * FROM hopital WHERE idHopital = ".$id."");
         $data=$req->fetch(PDO::FETCH_ASSOC);
@@ -39,6 +33,7 @@ class hopitalManager{
         return false;
     }
 
+    //Fonction qui modif un hopital selon son id
     public function update(hopital $hopital) 
     {
         $query = $this->_db->prepare(" UPDATE hopital SET Nom = (:nom), Adresse = (:adresse), Ville = (:ville), CodePostal = (:codePostal), Telephone = (:telephone) WHERE idHopital=(:idHopital)");

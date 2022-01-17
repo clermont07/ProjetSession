@@ -1,42 +1,64 @@
 <?php
 include_once("./crytage.php");
 
+//Fonction qui permet de connecter l'utilisateur du site a la bonne session
 if (isset($_POST["connection"])){
+
+    //Si un pseudo et un mot de passe est saisie
     if (isset($_POST["pseudo"]) && isset($_POST["motDePasse"])){
+
+        //Si la selection est un patient
         if($_POST["poste"] == "patient"){
+
+            //On verifi l'information est existante
             $msg = encryp($_POST['motDePasse']);
             $array = array("pseudo" => $_POST['pseudo'],"motDePasse" => $msg );
             $patient = new patient($array);
             $patientManager = new patientManager(connexion("bdd_hms"));
             $results = $patientManager->getPatientLog($patient);
         }
+
+        //Si la selection est un employer
         if($_POST["poste"] == "employer"){
+
+            //On verifi l'information est existante
             $array = array("pseudo" => $_POST['pseudo']);
             $employer = new employer($array);
             $employerManager = new employerManager(connexion("bdd_hms"));
             $results = $employerManager->getEmployerLog($employer);
         }
+
+        //Si une information est trouver
         if($results != false){
+
+            //Si le mot de passe est pas compatible on annule la verification
             if(decryp($results->getMotDePasse())!= $_POST["motDePasse"]){
                $results = false;
             }
        }
+
+       //Si la verification du pseudo et mot de passe est valide on connecte l'utilisateur a sa session
         if ($results != false) 
         {
             $_SESSION['pseudo'] = $_POST['pseudo'];
             $_SESSION['motDePasse'] = $_POST['motDePasse'];
 
+            //Si un patient
             if($_POST["poste"] == "patient"){
                 $_SESSION['id'] = $results->getIdPatient();
                 $_SESSION['idPoste'] = 0;
                 header("Location:patient");
             }
+
+            //Si un employer
             elseif($_POST["poste"] == "employer"){
                 $_SESSION['id'] = $results->getIdEmployer();
                 $_SESSION['idPoste'] = $results->getIdPoste();
                 header("Location:profil");
             }
         }
+
+        //Si la verification echou on demande de s'inscrire
         else{
             echo '<script>alert("Veuillez vous inscrire!")</script>';
         }
@@ -44,6 +66,7 @@ if (isset($_POST["connection"])){
 }
 ?>
 
+<!-- Affichage de la navbar -->
 <div class="topnav">
     <a class="active" style="float:right" href="dashboard/projet/mvc/connection">Se connecter</a>
     <a class="active" style="float:right" href="dashboard/projet/mvc/inscription">Inscription</a>
@@ -55,6 +78,8 @@ if (isset($_POST["connection"])){
     <br><br><br><br>
     <form method="post">
         <h1 style=color:black>Connection</h1>
+
+        <!-- Creation d'une selection pour l'utilisateur -->
         <select name="poste" style="width:178px;">
         <option value="patient" selected>Patient</option>
         <option value="employer">Employer</option>

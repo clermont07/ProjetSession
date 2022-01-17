@@ -4,21 +4,12 @@ class sexeManager{
     private $_db;
 
     //constructeur
-    public function __construct($db){
-        $this->setDb($db);
-    }
+    public function __construct($db){        $this->setDb($db);    }
     
-    public function setDb($db){
-        $this->_db = $db;
-    }
-    public function getTest(){
-        return "test";
-    }
-    
-    public function getDB(){
-        return $this->_db;
-    }
+    public function setDb($db){        $this->_db = $db;    }    
+    public function getDB(){        return $this->_db;    }
 
+    //Fonction qui selectionne tous les sexes
     public function getAllSexe(){
         $query = $this->_db->query("SELECT * FROM sexe ");
         $sexe = array();
@@ -28,6 +19,8 @@ class sexeManager{
         }     
         return $sexe;  
     }
+
+    //Fonction qui selectionne un sexe selon son id
     public function getSexe($id){
         $req = $this->_db->query("SELECT * FROM sexe WHERE idSexe = ".$id."");
         $data=$req->fetch(PDO::FETCH_ASSOC);

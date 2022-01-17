@@ -14,6 +14,7 @@ $result = $hopitalManager->getAllHopital();
 $departementManager = new departementManager(connexion("bdd_hms"));
 $resultAllDepartement = $departementManager->getAllDepartement();
 
+//Fonction qui modif les informations des hopitaux
 if(isset($_POST['modifier'])){
     $array = array("adresse" => trim($_POST['adresse']),
                     "nom" => trim($_POST["nom"]),
@@ -32,6 +33,8 @@ if(isset($_POST['modifier'])){
         echo '<script>alert("Modification échoué!")</script>';
     }
 }
+
+//Fonction qui supprime un departement
 if(isset($_POST['supprimer'])){
     $departementManager = new departementManager(connexion("bdd_hms"));
     $array = array("idDepartement" => $_POST["departement"]);
@@ -40,6 +43,8 @@ if(isset($_POST['supprimer'])){
     ?>
     <script>window.location.replace("dashboard/projet/mvc/hopital");</script><?php
 }
+
+//Fonction qui ajoute un departement
 if(isset($_POST['ajouter'])){
     $array = array( "departement" => trim($_POST['dep']));
 
@@ -58,6 +63,7 @@ if(isset($_POST['ajouter'])){
 <br>
 <div>
     <?php
+    //Creation d'une selection de departement
     $contenu1 ="<form method='post'>&nbsp;&nbsp;&nbsp;&nbsp;Département : <select name=departement style=width:176px;>";
     foreach($resultAllDepartement as $key => $value){
         $contenu1 .="<option value=".$value->getIdDepartement().">".$value->getDepartement()."</option>";
@@ -70,6 +76,8 @@ if(isset($_POST['ajouter'])){
 </div>
 <center>
 <?php
+
+//Affiche les hopitaux
 foreach($result as $key => $value){
     $contenu = "";
     $contenu .="<form method='post'><div class=card>";

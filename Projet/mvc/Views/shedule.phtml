@@ -12,6 +12,7 @@ include_once("./fonction.php");
 $sheduleManager = new sheduleManager(connexion("bdd_hms"));
 $resultShedule = $sheduleManager->getShedule($_SESSION["id"]);
 
+//Fonction qui permet de cree un shedule
 if(isset($_POST['cree'])){
     if($_POST["jour"] < date("Y-m-d")){
         echo '<script>alert("Entrer une date de shedule valide!")</script>';
@@ -27,7 +28,9 @@ if(isset($_POST['cree'])){
 
         $shedule = new shedule($array);
         $sheduleManager = new sheduleManager(connexion("bdd_hms"));
+
         try{
+        //si l'insertion reussi on transfere a la page shedule
         $sheduleManager->insertion($shedule);
         header("Location:shedule");
         }
@@ -37,6 +40,7 @@ if(isset($_POST['cree'])){
     }
 }
 
+//Fonction qui supprime la shedule 
 if(isset($_POST['supprimer'])){
     $array = array("idShedule" => $_POST['id']);
 
@@ -55,39 +59,51 @@ if(isset($_POST['supprimer'])){
 $contenu1  ="<br><form method=post >";
 $contenu1 .="<div class=center style=width:300px;>";
 $contenu1 .="<h4><b>Nouvelle Shedule</b></h4>";
+
+//cree un select pour afficher les heures de 1 à 12
 $contenu1 .="<p>Shedule <select name=HeureDebut style=width:40px;> </p>";
 for($i = 1 ; $i <= 12; $i++){
     $contenu1 .="<option value=".$i.">".$i."</option>";
 }
 $contenu1 .="</select>";
+
+//cree un select pour permet la selection de am ou pm
 $contenu1 .="<select name=tempsDebut style=width:50px;>";
 $contenu1 .="<option value=AM >AM</option>";
 $contenu1 .="<option value=PM >PM</option>";
 $contenu1 .="</select> à ";
+
+//cree un select pour afficher les heures de 1 à 12
 $contenu1 .="<select name=HeureFin style=width:40px;>";
 for($a = 1 ; $a <= 12; $a++){
     $contenu1 .="<option value=".$a.">".$a."</option>";
 }
 $contenu1 .="</select>";
+
+//cree un select pour permet la selection de am ou pm
 $contenu1 .="<select name=tempsFin style=width:50px;>";
 $contenu1 .="<option value=AM >AM</option>";
 $contenu1 .="<option value=PM >PM</option>";
 $contenu1 .="</select>";
+
 $contenu1 .="<p>Date &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=date name=jour style=width:178px; required></p>";
 $contenu1 .="<p>Frais &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=text name=frais pattern=[0-9]{,6} style=width:174px; required>$</p>";
+
+//cree un select pour permet la selection de 1 a 5 patient
 $contenu1 .="<p>Nb patient &nbsp;<select name=patient style=width:180px;></p>";
 for($b = 1 ; $b <= 5; $b++){
     $contenu1 .="<option value=".$b.">".$b."</option>";
 }
-$contenu1 .="</select>";
-$contenu1 .="</select><br><br>";
+$contenu1 .="</select><br>";
+
 $contenu1 .="<center><input type=submit name=cree class='Buttons buttons' value=Créé></center>";
 $contenu1 .="</div>";
 $contenu1 .="</form><br><br><br>";
 echo $contenu1;
 
-
+//Affiche les shedules du medecin 
 foreach($resultShedule as $key => $value){
+    //S'il est disponible affiche vert sinon rouge
     $contenu2  = ($value->getDisponibilite() == 1) ? "<div class=card1>":"<div class=card2>";
     $contenu2 .="<form method='post'><div class=container>";
     $contenu2 .="        <h3 class=card-title>".$value->getJour()."</h3><hr>";

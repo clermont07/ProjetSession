@@ -8,17 +8,10 @@ class groupeSanguinManager{
         $this->setDb($db);
     }
     
-    public function setDb($db){
-        $this->_db = $db;
-    }
-    public function getTest(){
-        return "test";
-    }
-    
-    public function getDB(){
-        return $this->_db;
-    }
+    public function setDb($db){        $this->_db = $db;    }    
+    public function getDB(){        return $this->_db;    }
 
+    //Fonction qui selectionne les groupes sanguins
     public function getAllSang(){
         $query = $this->_db->query("SELECT * FROM groupesanguin ");
         $sexe = array();
@@ -28,6 +21,8 @@ class groupeSanguinManager{
         }     
         return $sexe;  
     }
+
+    //Fonction qui selectionne un groupe sanguin selon son id
     public function getSang($id){
         $req = $this->_db->query("SELECT * FROM groupesanguin WHERE idGrpSang = ".$id."");
         $data=$req->fetch(PDO::FETCH_ASSOC);

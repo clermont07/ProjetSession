@@ -13,6 +13,8 @@ $resultSang = $sangManager->getAllSang();
 <div>
         <h1 style=color:black>Gestion compte patient</h1>
         <table>
+
+        <!-- Permet la recherche d'un patient -->
             <tr><form method="post">
                 <td>Recherche patient  </td>
                 <td><input type="text" name="assuranceMaladieTrouver" style="width:42%"; pattern="[A-Z]{4}[0-9]{8}" placeholder="AAAA12345678" maxlength='20' required><input type="submit" class="Buttons buttons" name="trouver" value="Trouver"></td>
@@ -55,6 +57,8 @@ $resultSang = $sangManager->getAllSang();
                 <td>Sexe  </td>
                 <td>
                 <?php
+
+                //Creation d'une selection de genre
                 $contenu ="<select name=sexe id=sexe style=width:74%;>";
                 foreach($resultSexe as $key => $value){
                     $contenu .="<option value=".$value->getIdSexe().">".$value->getGenre()."</option>";
@@ -67,6 +71,8 @@ $resultSang = $sangManager->getAllSang();
                 <td>Groupe Sanguin  </td>
                 <td>
                 <?php
+
+                //Creation d'une selection de groupe sanguin
                 $contenu1 ="<select name=grpSang  id=grpSang style=width:74%;>";
                 foreach($resultSang as $key => $value){
                     $contenu1 .="<option value=".$value->getIdGrpSang().">".$value->getGroupeSanguin()."</option>";
@@ -108,7 +114,11 @@ $resultSang = $sangManager->getAllSang();
     </form>
 
     <?php
+
+        //Fonction qui permet l'inscription d'un patient
         if(isset($_POST['inscrire'])){
+
+            //Verification de la date saisie
             if($_POST["dateNaissance"] > date("Y-m-d")){
                 echo '<script>alert("Entrer une date de naissance valide!")</script>';
             }
@@ -132,6 +142,8 @@ $resultSang = $sangManager->getAllSang();
                 $patient = new patient($array);
                 $patientManager = new patientManager(connexion("bdd_hms"));
                 try{
+
+                //Insertion d'un patient
                 $patientManager->gestionPatientInsertion($patient);
                 echo "<center><p style=color:green;>Patient inscrit!</p></center>";
                 }
@@ -140,19 +152,25 @@ $resultSang = $sangManager->getAllSang();
                 }
             }
         }
+
+        //Fonction de trouver un patient
         if(isset($_POST['trouver'])){
             $array = array("assuranceMaladie" => $_POST['assuranceMaladieTrouver']);
             $patient = new patient($array);
             $patientManager = new patientManager(connexion("bdd_hms"));
             $result = $patientManager->getGestionPatient($patient);
 
+            //Si le patient est trouver
             if($result != null){
                 $rendezvousManager = new rendezvousManager(connexion("bdd_hms"));
                 $resultRendezvous = $rendezvousManager->getValidationRendezvous($result->getIdPatient(),$_SESSION["idHopital"]);
-                    
+                
+                //Si le patient a un rendezvous a la meme l'hopital que l'employer qui le cherche
                 if($resultRendezvous != null){
                     $msg = decryp($result->getMotDePasse());
                     $_SESSION['idPatient'] = $result->getIdPatient();
+
+                    //On assigne ses informations aux inputs
                     ?>
                     <script>document.getElementById("prenom").value = '<?php  echo $result->getPrenom(); ?>'</script>
                     <script>document.getElementById("nom").value = '<?php  echo $result->getNom(); ?>'</script>
@@ -175,7 +193,11 @@ $resultSang = $sangManager->getAllSang();
                 }
             }
         }
+
+        //Fonction qui permet de modifier les information du patient
         if(isset($_POST['modifier'])){
+
+            //Verification de la date saisie
             if($_POST["dateNaissance"] > date("Y-m-d")){
                 echo '<script>alert("Entrer une date de naissance valide!")</script>';
             }
@@ -200,6 +222,8 @@ $resultSang = $sangManager->getAllSang();
                 $patient = new patient($array);
                 $patientManager = new patientManager(connexion("bdd_hms"));
                 try{
+                    
+                //Applique la modification
                 $patientManager->gestionPatientModifier($patient);
                 echo "<center><p style=color:green;>Patient Modifier!</p></center>";
                 }

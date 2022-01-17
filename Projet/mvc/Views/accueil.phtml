@@ -3,12 +3,14 @@
     $result = $hopitalManager->getAllHopital();
 ?>
 
+<!-- Affiche la navbar de l'accueil -->
 <div class="topnav">
     <a class="active" style="float:right" href="dashboard/projet/mvc/connection">Se connecter</a>
     <a class="active" style="float:right" href="dashboard/projet/mvc/inscription">Inscription</a>
     <a class="active" style="float:right" href="dashboard/projet/mvc/accueil">Accueil</a>
 </div> 
 
+<!-- Affiche les noms des hopitaux -->
 <div class="items">
     <div class=tSante><h2><?php echo $result[0]->getNom();?></h2></div>
     <div class=tCoeur><h2><?php echo $result[1]->getNom();?></h2></div>
@@ -16,6 +18,7 @@
     <div class=tTalon><h2><?php echo $result[3]->getNom();?></h2></div>
 </div>
 
+<!-- Affiche les photos des hopitaux -->
 <div class="items">
     <span class="imgSante">
         <?php

@@ -6,6 +6,7 @@ $resultprescription = $prescriptionManager->getPrescription($_SESSION["id"]);
 $patientManager = new patientManager(connexion("bdd_hms"));
 $resultPatient = $patientManager->getPatient($_SESSION["id"]);
 
+//Pour chaque prescription du patient connecter on l'affiche
 foreach($resultprescription as $key => $value){
     $employerManager = new employerManager(connexion("bdd_hms"));
     $resultEmployer = $employerManager->getEmployer($value->getIdEmployer());

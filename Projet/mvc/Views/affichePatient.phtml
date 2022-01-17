@@ -15,18 +15,25 @@ $resultSexe = $sexeManager->getAllSexe();
 $sangManager = new groupeSanguinManager(connexion("bdd_hms"));
 $resultSang = $sangManager->getAllSang();
 
+//Fonction qui change l'interface pour la preparation d'un transfere
 if(isset($_POST['transferer'])){
+
+    //Trouve toute les infirmieres
     $employerManager = new employerManager(connexion("bdd_hms"));
-    $resultEmployer = $employerManager->getInfirmiere(3);
+    $resultEmployer = $employerManager->getEmployerPoste(3);
     if($resultEmployer != null){
         $debut = 1;
 
+        //Pour chaque infirmiere
         foreach($resultEmployer as $key1 => $value1){
             $sheduleManager = new sheduleManager(connexion("bdd_hms"));
-            $resultShedule = $sheduleManager->getSheduleDispo($value1->getIdEmployer());
 
+            //On choisi les shedules disponible
+            $resultShedule = $sheduleManager->getSheduleDispo($value1->getIdEmployer());
             $hopitalManager = new hopitalManager(connexion("bdd_hms"));
             $resultHopital = $hopitalManager->getHopital($value1->getIdHopital());
+
+            //On affiche chaque shedule disponible
             foreach($resultShedule as $key2 => $value2){
                 $contenu2  ="<div class=card>";
                 $contenu2 .="<form method='post'><div class=container>";    
@@ -48,18 +55,24 @@ if(isset($_POST['transferer'])){
         }
     }
 }
+
+//Fonction qui fait le transfere de patient a une infirmiere
 if(isset($_POST['trans'])){
+
+    //Enleve une place a la shedule de l'infirmiere
     $Cmp = $_POST["Cmp"] - 1;
     $arrayDefaultShedule = array("idShedule" => $_POST['idShedule'],"cmpPatient" => $Cmp);
     $sheduleDefault = new shedule($arrayDefaultShedule);
     $sheduleManager = new sheduleManager(connexion("bdd_hms"));
     $sheduleManager->updateCmp($sheduleDefault);
 
+    //Cree un rendez vous avec l'infirmiere
     $array = array("idShedule" => $_POST['idShedule'], "idPatient"=>$_POST["idPatient"],"idEmployer"=>$_POST["idEmp"],"idHopital"=>$_POST["idHopital"]);
     $rendezvous = new rendezvous($array);
     $rendezvousManager = new rendezvousManager(connexion("bdd_hms"));
     $rendezvousManager->insertion($rendezvous);
 
+    //S'il n'a plus de place a la shedule on la rend indisponible
     if($Cmp == 0){
         $arrayNouvelShedule = array("idShedule" => $_POST['idShedule'],"disponibilite" => $Cmp);
         $sheduleNouvel = new shedule($arrayNouvelShedule);
@@ -68,6 +81,8 @@ if(isset($_POST['trans'])){
 
     echo "<center><p style=color:green;>Patient Transféré!</p></center>";
 }
+
+//Fonction qui permet afficher les facture d'un patient
 if(isset($_POST['facture'])){
     $debut = 1;
     
@@ -77,6 +92,7 @@ if(isset($_POST['facture'])){
     $patientManager = new patientManager(connexion("bdd_hms"));
     $resultPatient = $patientManager->getPatient($_POST["idPatient"]);
     
+    //Pour chaque facture on l'affiche
     foreach($resultFacture as $key => $value){
         $employerManager = new employerManager(connexion("bdd_hms"));
         $resultEmployer = $employerManager->getEmployer($value->getIdEmployer());
@@ -133,6 +149,8 @@ if(isset($_POST['facture'])){
     <?php
     }
 }
+
+//Affichage a l'entre sur la page affichepatient
 if($debut == 0){
 ?>
 <center>
@@ -174,6 +192,8 @@ if($debut == 0){
                 <td>Sexe  </td>
                 <td>
                 <?php
+
+                //Creation d'une selection de genre
                 $contenu ="<select name=sexe id=sexe style=width:74%;>";
                 foreach($resultSexe as $key => $value){
                     $contenu .="<option value=".$value->getIdSexe().">".$value->getGenre()."</option>";
@@ -186,6 +206,8 @@ if($debut == 0){
                 <td>Groupe Sanguin  </td>
                 <td>
                 <?php
+
+                 //Creation d'une selection de groupe sanguin
                 $contenu1 ="<select name=grpSang  id=grpSang style=width:74%;>";
                 foreach($resultSang as $key => $value){
                     $contenu1 .="<option value=".$value->getIdGrpSang().">".$value->getGroupeSanguin()."</option>";
@@ -226,6 +248,8 @@ if($debut == 0){
         <table>
     </form>
     <?php
+
+        //Fonction qui cree un patient
         if(isset($_POST['inscrire'])){
             if($_POST["dateNaissance"] > date("Y-m-d")){
                 echo '<script>alert("Entrer une date de naissance valide!")</script>';
@@ -259,12 +283,15 @@ if($debut == 0){
                 }
             }
         }
+
+        //Fonction qui permet de trouver un patient
         if(isset($_POST['trouver'])){
             $array = array("assuranceMaladie" => $_POST['assuranceMaladieTrouver']);
             $patient = new patient($array);
             $patientManager = new patientManager(connexion("bdd_hms"));
             $result = $patientManager->getGestionPatient($patient);
 
+            //Si le patient est trouver on assigne ses informtion aux inputs
             if($result != null){
                 $msg = decryp($result->getMotDePasse());
                 ?>
@@ -290,6 +317,8 @@ if($debut == 0){
             }
             
         }
+
+        //Fonction qui modifi un patient
         if(isset($_POST['modifier'])){
             if($_POST["dateNaissance"] > date("Y-m-d")){
                 echo '<script>alert("Entrer une date de naissance valide!")</script>';
@@ -335,6 +364,7 @@ $prescriptionManager = new prescriptionManager(connexion("bdd_hms"));
 $patientManager = new patientManager(connexion("bdd_hms"));
 $resultPatient = $patientManager->getAllPatient();
 
+//Affiche chaque patient
 foreach($resultPatient as $key => $value){
 
     $sang = $sangManager->getSang($value->getIdGrpSang());
@@ -352,7 +382,11 @@ foreach($resultPatient as $key => $value){
     $contenu2 .="        <p class=card-text>Groupe sanguin : ".$sang->getGroupeSanguin()."</p>";
     $contenu2 .="        <h4 class=card-text><u>Diagnostic</u></h4>";
     $contenu2 .="        <p class=card-text>Description : ".$value->getDescription()."</p>";
+
+    //Recherche si le patient a une prescription
     $resultPrescription = $prescriptionManager->getPrescription($value->getIdPatient());
+
+    //Si une prescription est trouver on l'affiche
     if($resultPrescription != null){
         $contenu2 .="        <h4 class=card-text><u>Prescription</u></h4>";
         foreach($resultPrescription as $key => $value){
@@ -371,6 +405,8 @@ foreach($resultPatient as $key => $value){
     $contenu2 .="    </div></div></form>";
     echo $contenu2;
 }
+
+//Fonction qui supprime un patient
 if(isset($_POST["supprimer"])){
     $array = array("idPatient" => $_POST["idPatient"]);
     $idPatient = new patient($array);

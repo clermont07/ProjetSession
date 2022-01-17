@@ -5,6 +5,7 @@ img {border-radius: 5px 5px 0 0;width: 300px;height: 300px;}
 .container {width:100%;}
 </style>
 
+<!-- Affichage de la navbar -->
 <div class="topnav">
     <a class="active" style="float:right" href="dashboard/projet/mvc/connection">Se connecter</a>
     <a class="active" style="float:right" href="dashboard/projet/mvc/inscription">Inscription</a>
@@ -12,6 +13,8 @@ img {border-radius: 5px 5px 0 0;width: 300px;height: 300px;}
 </div>
 
 <?php
+
+//Affiche l'information de l'hopital 
 $idHopital = $_GET["idHopital"];
 $hopitalManager = new hopitalManager(connexion("bdd_hms"));
 $result = $hopitalManager->getHopital($idHopital);

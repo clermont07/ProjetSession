@@ -4,21 +4,12 @@ class prescriptionManager{
     private $_db;
 
     //constructeur
-    public function __construct($db){
-        $this->setDb($db);
-    }
+    public function __construct($db){        $this->setDb($db);    }
     
-    public function setDb($db){
-        $this->_db = $db;
-    }
-    public function getTest(){
-        return "test";
-    }
-    
-    public function getDB(){
-        return $this->_db;
-    }
+    public function setDb($db){        $this->_db = $db;    }    
+    public function getDB(){        return $this->_db;    }
 
+    //Fonction qui insere une prescription
     public function insertion(prescription $prescription) 
     {
         $query = $this->_db->prepare("INSERT into prescription(Date,Description,idHopital,idEmployer,idPatient) 
@@ -31,6 +22,7 @@ class prescriptionManager{
         $query->execute();
     }
 
+    //Fonction qui selectionne une prescription selon son id
     public function getPrescription($id){
         $query = $this->_db->query("SELECT * FROM prescription WHERE idPatient = ".$id."");
         $prescription = array();

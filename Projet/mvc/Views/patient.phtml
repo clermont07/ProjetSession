@@ -12,19 +12,26 @@ img {  border-radius: 5px 5px 0 0;  width: 300px;  height: 400px;}
 </style>
 <?php
 include_once("./fonction.php");
+//Permet de changer l'affichage
 $mode = 0;
-$employerManager = new employerManager(connexion("bdd_hms"));
-$result = $employerManager->getMedecin(1);
 
+$employerManager = new employerManager(connexion("bdd_hms"));
+$result = $employerManager->getEmployerPoste(1);
+
+//Fonction qui affiche les shedules du medecin selectionne
 if(isset($_POST["shedule"])){
+    //enleve l'affichage d'entre sur la page patient
     $mode = 1;
+
     $sheduleManager = new sheduleManager(connexion("bdd_hms"));
     $resultShedule = $sheduleManager->getSheduleDispo($_POST["idEmployer"]);
 
     $rendezvousManager = new rendezvousManager(connexion("bdd_hms"));
     $resultRendezvous = $rendezvousManager->getPatientRendezvous($_SESSION["id"]);
 
+    //Preparation de l'incrementation pour l'id du bouton reserver
     $cmpt = 0;
+    //Pour chaque shedule trouver on cree son affichage
     foreach($resultShedule as $key => $value){
         
         $contenu2  = "<div class=card1>";
@@ -41,8 +48,11 @@ if(isset($_POST["shedule"])){
         $contenu2 .="    </div></div></form>";
         echo $contenu2;
 
+        //Fonction qui permet de cree un id different pour chaque boutton reserver
+        //Pour chaque rendez vous 
         foreach($resultRendezvous as $key => $value1){
 
+            //Si le patient deja se rendez vous on desactive la reservation
             if($value1->getIdShedule() == $value->getIdShedule()){
                 ;?><script>document.getElementById("reserver<?php echo $cmpt?>").disabled = true; </script><?php
                 $cmpt ++;
@@ -51,19 +61,21 @@ if(isset($_POST["shedule"])){
     }
 }
 
+//Fonction qui permet de faire une reservation 
 if(isset($_POST["reserver"])){
     $array = array("idShedule" => $_POST['id'],"idPatient" => $_SESSION["id"],"idEmployer" => $_POST["idEmployer"],"idHopital"=> $_POST["idHopital"]);
     $rendezvous = new rendezvous($array);
     $rendezvousManager = new rendezvousManager(connexion("bdd_hms"));
     $rendezvousManager->insertion($rendezvous);
 
+    //Enleve une place dans la shedule selectionner
     $defaultCmp = $_POST["defaultCmp"] - 1;
     $arrayDefaultShedule = array("idShedule" => $_POST['id'],"cmpPatient" => $defaultCmp);
     $sheduleDefault = new shedule($arrayDefaultShedule);
     $sheduleManager = new sheduleManager(connexion("bdd_hms"));
     $sheduleManager->updateCmp($sheduleDefault);
 
-    
+    //S'il n'a plus de place on rend indisponible la shedule
     if($defaultCmp == 0){
         $arrayDefaultShedule = array("idShedule" => $_POST['id'],"disponibilite" => 0);
         $sheduleDefault = new shedule($arrayDefaultShedule);
@@ -72,7 +84,10 @@ if(isset($_POST["reserver"])){
     echo "<center><p style=color:green;>Rendez Vous confirmé!</p></center>";
 }
 
+//Affichage d'entrer sur la page patient
 if($mode == 0){
+
+    //Pour chaque medecin on cree son interface
     foreach($result as $key => $value){
         $posteManager = new posteManager(connexion("bdd_hms"));
         $resultPoste = $posteManager->getPoste($value->getIdPoste());
@@ -98,10 +113,14 @@ if($mode == 0){
         $sheduleManager = new sheduleManager(connexion("bdd_hms"));
         $resultShedule = $sheduleManager->getSheduleDispo($value->getIdEmployer());
 
+        //Si le medecin a des shedules on affiche qui est disponible
         if($resultShedule != null){
             $contenu2 .="<p>Disponible : <b style=color:green;> Oui </b></p>";
             $contenu2 .="<center><input type='submit' class='Buttons buttons' style=width:100px name='shedule' value='Shedule'></center>";
-        }else{
+        }
+        
+        //Sinon si le medecin n'a pas de shedules on affiche qui est pas disponible et deactive le bouton shedule
+        else{
             $contenu2 .="<p>Disponible : <b style=color:red;> Non </b></p>";
             $contenu2 .="<center><input type='submit' class='Buttons buttons' disabled style=width:100px name='shedule' value='Shedule'></center>";
         }

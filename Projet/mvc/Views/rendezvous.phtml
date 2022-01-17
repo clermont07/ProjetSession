@@ -13,6 +13,8 @@ $debut = 0;
 $rendezvousManager = new rendezvousManager(connexion("bdd_hms"));
 ?>
 <br>
+
+<!-- Affiche un input qui permet inserer l'assurance maladie pour la recherche -->
 <center>
     <form method="post">
         Recherche patient <input type="text" name="assuranceMaladieTrouver" style="width:200px"; pattern="[A-Z]{4}[0-9]{8}" placeholder="AAAA12345678" maxlength='20' required><input type="submit" class='Buttons buttons' name="trouver" value="Trouver"></td>
@@ -20,18 +22,26 @@ $rendezvousManager = new rendezvousManager(connexion("bdd_hms"));
 </center>
 
 <?php
+//Fonction qui permet de trouver les infirmieres disponible pour transferer un patient
 if(isset($_POST['transferer'])){
     $employerManager = new employerManager(connexion("bdd_hms"));
-    $resultEmployer = $employerManager->getInfirmiere(3);
+
+    //Recherche des infirmieres
+    $resultEmployer = $employerManager->getEmployerPoste(3);
     if($resultEmployer != null){
         $debut = 1;
 
+        //Pour chaque infimiere
         foreach($resultEmployer as $key1 => $value1){
+            //On prend les shedules disponible
             $sheduleManager = new sheduleManager(connexion("bdd_hms"));
             $resultShedule = $sheduleManager->getSheduleDispo($value1->getIdEmployer());
 
+            //On prend l'information de l'hopital de l'infirmiere
             $hopitalManager = new hopitalManager(connexion("bdd_hms"));
             $resultHopital = $hopitalManager->getHopital($value1->getIdHopital());
+
+            //Pour chaque shedule
             foreach($resultShedule as $key2 => $value2){
                 $contenu2  ="<div class=card>";
                 $contenu2 .="<form method='post'><div class=container>";    
@@ -53,18 +63,25 @@ if(isset($_POST['transferer'])){
         }
     }
 }
+
+//Transfere un patient 
 if(isset($_POST['trans'])){
+    //Prend le compte de patient de la shedule et retire 1 place
     $Cmp = $_POST["Cmp"] - 1;
     $arrayDefaultShedule = array("idShedule" => $_POST['idShedule'],"cmpPatient" => $Cmp);
     $sheduleDefault = new shedule($arrayDefaultShedule);
+
+    //Modifie le compteur
     $sheduleManager = new sheduleManager(connexion("bdd_hms"));
     $sheduleManager->updateCmp($sheduleDefault);
 
+    //insertion du rendez vous avec l'infirmiere
     $array = array("idShedule" => $_POST['idShedule'], "idPatient"=>$_POST["idPatient"],"idEmployer"=>$_POST["idEmp"],"idHopital"=>$_POST["idHopital"]);
     $rendezvous = new rendezvous($array);
     $rendezvousManager = new rendezvousManager(connexion("bdd_hms"));
     $rendezvousManager->insertion($rendezvous);
 
+    //Si le compteur est a 0, mettre la shedule non disponible
     if($Cmp == 0){
         $arrayNouvelShedule = array("idShedule" => $_POST['idShedule'],"disponibilite" => $Cmp);
         $sheduleNouvel = new shedule($arrayNouvelShedule);
@@ -73,24 +90,37 @@ if(isset($_POST['trans'])){
 
     echo "<center><p style=color:green;>Patient Transféré!</p></center>";
 }
+
+//Fonction pour facturer un patient
 if(isset($_POST['facturer'])){
     $tps = ($_POST['frais']/100) * 5;
     $tvq = ($_POST['frais']/100) * 10;
     $total = $_POST['frais'] + $tps + $tvq;
     $array = array( "date" => date("Y-m-d"),"avantTaxe" => $_POST['frais'],"tps" => $tps,"tvq" => $tvq,"prixTotal" => $total,"idPatient"=>$_POST["idPatient"],"idHopital" => $_SESSION["idHopital"],"idEmployer" => $_SESSION["id"]);
     $facture = new facture($array);
+
+    //Insert la facture
     $factureManager = new factureManager(connexion("bdd_hms"));
     $resultFacture = $factureManager->Insert($facture);
 
     echo "<center><p style=color:green;>Patient Facturé!</p></center>";
 }
+
+//Trouver un patient
 if(isset($_POST['trouver'])){
     $array = array("assuranceMaladie" => $_POST['assuranceMaladieTrouver']);
     $patient = new patient($array);
+
+    //Trouver le patient avec son assurance maladie
     $patientManager = new patientManager(connexion("bdd_hms"));
     $resultPatient = $patientManager->getGestionPatient($patient);
+
+    //Si un patient trouver
     if($resultPatient != null){
+        //Verifie s'il le patient a un rendez a cette hopital
         $resultRendezvous = $rendezvousManager->getValidationRendezvous($resultPatient->getIdPatient(),$_SESSION["idHopital"]);
+        
+        //S'il a un rendez vous on l'affiche
         if($resultRendezvous != null){
         $debut = 1;
         affiche($rendezvousManager->getPatientRendezvous($resultPatient->getIdPatient()));
@@ -100,20 +130,26 @@ if(isset($_POST['trouver'])){
         }
     }
 }
+
+//Fonction pour modifier
 if(isset($_POST['modifier'])){
     $debut = 1;
+
+    //On trouve le rendez vous avec son id
     $resultRendezvous = $rendezvousManager->getIdRendezvous($_POST["id"]);
 
     $sheduleManager = new sheduleManager(connexion("bdd_hms"));
     $patientManager = new patientManager(connexion("bdd_hms"));
     $employerManager = new employerManager(connexion("bdd_hms"));
 
+    //Pour le Rendez Vous 
     foreach($resultRendezvous as $key => $value){
         $resultSheduleEmployer = $sheduleManager->getSheduleDispo($_SESSION["id"]);
         $resultShedule = $sheduleManager->getIdShedule($value->getIdShedule());
         $resultPatient = $patientManager->getPatient($value->getIdPatient());
         $resultEmployer = $employerManager->getEmployer($value->getIdEmployer());
 
+        //Affiche les informations du rendez vous 
         $contenu2  ="<center><br><div class=card1>";
         $contenu2 .="<form method='post'><div class=container>";    
         $contenu2 .="        <h3 class=card-title>".$resultPatient->getAssuranceMaladie()."</h3><hr>";
@@ -124,6 +160,8 @@ if(isset($_POST['modifier'])){
         $contenu2 .="        <input type='hidden' name='id' value=".$value->getIdRendezvous().">";
         $contenu2 .="        <input type='hidden' name='defaultShedule' value=".$value->getIdShedule().">";
         $contenu2 .="        <input type='hidden' name='defaultCmp' value=".$resultShedule->getCmpPatient().">";
+
+        //Cree un selection avec les dates des rendez vous disponible de l'employer
         $contenu2 .="<select name=date  id=date ;>";
         foreach($resultSheduleEmployer as $key => $value){
             if($value->getIdShedule() == $resultShedule->getIdShedule()){
@@ -133,15 +171,19 @@ if(isset($_POST['modifier'])){
             }
         }
         $contenu2 .="</select>";
+
         $contenu2 .="<br><br><input type='submit' class='Buttons buttons' style=width:100px name='sauvegarder' value='Sauvegarder'><br>";
         $contenu2 .="</div></div></form></center>";
         echo $contenu2;
     }
 }
+
+//Enregistre le nouveaux rendez vous
 if(isset($_POST['sauvegarder'])){
     $array = array("idShedule" => $_POST['date'],"idRendezvous" => $_POST['id']);
     $rendezvous = new rendezvous($array);
 
+    //Prepare l'ajout un rendez vous a l'ancienne que le patient a pris rendez vous
     $defaultCmp = $_POST["defaultCmp"] + 1;
     $arrayDefaultShedule = array("idShedule" => $_POST['defaultShedule'],"cmpPatient" => $defaultCmp);
 
@@ -150,28 +192,35 @@ if(isset($_POST['sauvegarder'])){
     $rendezvousManager = new rendezvousManager(connexion("bdd_hms"));
 
     try{
+    //Ajoute du rendez vous
     $sheduleManager->updateCmp($sheduleDefault);
 
     $resultCmp = $sheduleManager->getIdShedule($_POST['date']);
+
+    //Retire une place de rendez vous a la nouvel shedule selectionner
     $NouvelCmp = $resultCmp->getCmpPatient() - 1;
 
+    //Si le rendez vous n'etait plus disponible on le rend disponible 
     if($_POST["defaultCmp"] == 0){
         $arrayDefaultShedule = array("idShedule" => $_POST['defaultShedule'],"disponibilite" => 1);
         $sheduleDefault = new shedule($arrayDefaultShedule);
         $sheduleManager->updateDisponibilite($sheduleDefault);
     }
 
+    //Si la nouvel shedule selectionner est a 0 on la rend indisponible
     if($NouvelCmp == 0){
         $arrayNouvelShedule = array("idShedule" => $_POST['date'],"disponibilite" => $NouvelCmp);
         $sheduleNouvel = new shedule($arrayNouvelShedule);
         $sheduleManager->updateDisponibilite($sheduleNouvel);
     }
 
+    //On modifi le compteur de la nouvel shedule
     $arrayNouvelShedule = array("idShedule" => $_POST['date'],"cmpPatient" => $NouvelCmp);
 
     $sheduleNouvel = new shedule($arrayNouvelShedule);
     $sheduleManager->updateCmp($sheduleNouvel);
 
+    //On modifi le rendez vous
     $rendezvousManager->updateRendezvous($rendezvous);
     echo "<center><p style=color:green;>Rendez Vous Modifier!</p></center>";
     }
@@ -180,10 +229,12 @@ if(isset($_POST['sauvegarder'])){
     }
 }
 
+//l'affichage de depart quand on accede a la page rendezvous
 if($debut == 0){
     affiche($rendezvousManager->getRendezvous($_SESSION["id"]));
 }
 
+//Fonction qui supprime un rendez vous
 if(isset($_POST['supprimer'])){
     $array = array("idRendezvous" => $_POST['id']);
 
@@ -199,6 +250,7 @@ if(isset($_POST['supprimer'])){
         }
 }
 
+//Fonction de l'affichage de la page
 function affiche($resultRendezvous){
 
     $sheduleManager = new sheduleManager(connexion("bdd_hms"));
@@ -206,6 +258,7 @@ function affiche($resultRendezvous){
     $employerManager = new employerManager(connexion("bdd_hms"));
 
     foreach($resultRendezvous as $key => $value){
+
         $resultShedule = $sheduleManager->getIdShedule($value->getIdShedule());
         $resultPatient = $patientManager->getPatient($value->getIdPatient());
         $resultEmployer = $employerManager->getEmployer($value->getIdEmployer());
@@ -223,11 +276,14 @@ function affiche($resultRendezvous){
         $contenu2 .="        <input type='hidden' name='id' value=".$value->getIdRendezvous().">";
         $contenu2 .="        <input type='hidden' name='idPatient' value=".$resultPatient->getIdPatient().">";
         $contenu2 .="        <input type='submit' class='Buttons buttons' style=width:68px name='facturer' value='Facturer'>";
+        
+        //Si c"est un medecin qui a acces a la page on lui ajout les boutons de gestion
         if($_SESSION['idPoste'] == 1){
         $contenu2 .="        <input type='submit' class='Buttons buttons' style=width:74px name='supprimer' value='Supprimer'>";
         $contenu2 .="        <input type='submit' class='Buttons buttons' style=width:68px name='modifier' value='Modifier'>";
         $contenu2 .="        <input type='submit' class='Buttons buttons' style=width:74px name='transferer' value='Transférer'><br>";
         }
+        
         $contenu2 .="    </div></div></form>";
         echo $contenu2;
     }
